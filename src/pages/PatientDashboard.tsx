@@ -6,12 +6,15 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Calendar, FileText, Video, LogOut, User } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { ProfileSettingsDialog } from "@/components/ProfileSettingsDialog";
+import { VideoCallDialog } from "@/components/VideoCallDialog";
 
 const PatientDashboard = () => {
   const [user, setUser] = useState<any>(null);
   const [appointments, setAppointments] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [profileDialogOpen, setProfileDialogOpen] = useState(false);
+  const [videoCallOpen, setVideoCallOpen] = useState(false);
+  const [selectedAppointment, setSelectedAppointment] = useState<any>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -67,6 +70,11 @@ const PatientDashboard = () => {
   const handleSignOut = async () => {
     await supabase.auth.signOut();
     navigate("/");
+  };
+
+  const handleJoinCall = (appointment: any) => {
+    setSelectedAppointment(appointment);
+    setVideoCallOpen(true);
   };
 
   if (loading) {
@@ -162,7 +170,11 @@ const PatientDashboard = () => {
                       </div>
                     </div>
                     <div className="flex gap-2">
-                      <Button size="sm" variant="outline">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => handleJoinCall(appointment)}
+                      >
                         <Video className="h-4 w-4 mr-2" />
                         Join Call
                       </Button>
@@ -182,6 +194,15 @@ const PatientDashboard = () => {
         user={user}
         onUpdate={checkUser}
       />
+
+      {selectedAppointment && (
+        <VideoCallDialog
+          open={videoCallOpen}
+          onOpenChange={setVideoCallOpen}
+          appointmentId={selectedAppointment.id}
+          userName={selectedAppointment.doctor.full_name}
+        />
+      )}
     </div>
   );
 };

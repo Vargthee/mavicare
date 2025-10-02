@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Calendar, FileText, Users, LogOut, Settings } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import DoctorProfileSetup from "@/components/DoctorProfileSetup";
+import { VideoCallDialog } from "@/components/VideoCallDialog";
 
 const DoctorDashboard = () => {
   const [user, setUser] = useState<any>(null);
@@ -13,6 +14,8 @@ const DoctorDashboard = () => {
   const [appointments, setAppointments] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [showProfileSetup, setShowProfileSetup] = useState(false);
+  const [videoCallOpen, setVideoCallOpen] = useState(false);
+  const [selectedAppointment, setSelectedAppointment] = useState<any>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -83,6 +86,11 @@ const DoctorDashboard = () => {
   const handleProfileComplete = () => {
     setShowProfileSetup(false);
     checkUser();
+  };
+
+  const handleStartConsultation = (appointment: any) => {
+    setSelectedAppointment(appointment);
+    setVideoCallOpen(true);
   };
 
   if (loading) {
@@ -208,7 +216,12 @@ const DoctorDashboard = () => {
                         </div>
                       </div>
                       <div className="flex gap-2">
-                        <Button size="sm">Start Consultation</Button>
+                        <Button
+                          size="sm"
+                          onClick={() => handleStartConsultation(appointment)}
+                        >
+                          Start Consultation
+                        </Button>
                         <Button size="sm" variant="outline" onClick={() => navigate("/medical-records")}>
                           View Records
                         </Button>
@@ -253,6 +266,15 @@ const DoctorDashboard = () => {
           </Card>
         </div>
       </div>
+
+      {selectedAppointment && (
+        <VideoCallDialog
+          open={videoCallOpen}
+          onOpenChange={setVideoCallOpen}
+          appointmentId={selectedAppointment.id}
+          userName={selectedAppointment.patient.full_name}
+        />
+      )}
     </div>
   );
 };
