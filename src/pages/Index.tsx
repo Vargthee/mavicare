@@ -8,49 +8,49 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       {/* Navigation */}
       <nav className="border-b border-border bg-card/50 backdrop-blur-sm fixed w-full z-50">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <h1 className="text-2xl font-bold bg-gradient-hero bg-clip-text text-transparent">
-            MediConnect
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-4 flex justify-between items-center">
+          <h1 className="text-xl sm:text-2xl font-bold bg-gradient-hero bg-clip-text text-transparent">
+            MaviCare
           </h1>
-          <div className="flex gap-4">
+          <div className="flex gap-2 sm:gap-4">
             <Link to="/auth">
-              <Button variant="ghost">Sign In</Button>
+              <Button variant="ghost" size="sm" className="sm:size-default">Sign In</Button>
             </Link>
             <Link to="/auth">
-              <Button>Get Started</Button>
+              <Button size="sm" className="sm:size-default">Get Started</Button>
             </Link>
           </div>
         </div>
       </nav>
 
       {/* Hero Section */}
-      <section className="pt-32 pb-20 px-4">
+      <section className="pt-24 sm:pt-32 pb-12 sm:pb-20 px-4">
         <div className="container mx-auto">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div className="space-y-6 animate-fade-in">
-              <h2 className="text-5xl md:text-6xl font-bold leading-tight">
+          <div className="grid md:grid-cols-2 gap-8 sm:gap-12 items-center">
+            <div className="space-y-4 sm:space-y-6 animate-fade-in">
+              <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight">
                 Healthcare at Your{" "}
                 <span className="bg-gradient-hero bg-clip-text text-transparent">
                   Fingertips
                 </span>
               </h2>
-              <p className="text-xl text-muted-foreground">
+              <p className="text-lg sm:text-xl text-muted-foreground">
                 Connect with verified doctors, book consultations, and manage your medical records securely - all in one place.
               </p>
-              <div className="flex gap-4 pt-4">
-                <Link to="/auth">
-                  <Button size="lg" className="text-lg px-8">
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-2 sm:pt-4">
+                <Link to="/auth" className="w-full sm:w-auto">
+                  <Button size="lg" className="w-full sm:w-auto text-base sm:text-lg px-6 sm:px-8">
                     Book Consultation
                   </Button>
                 </Link>
-                <Link to="/auth">
-                  <Button size="lg" variant="outline" className="text-lg px-8">
+                <Link to="/auth" className="w-full sm:w-auto">
+                  <Button size="lg" variant="outline" className="w-full sm:w-auto text-base sm:text-lg px-6 sm:px-8">
                     Join as Doctor
                   </Button>
                 </Link>
               </div>
             </div>
-            <div className="relative animate-fade-in">
+            <div className="relative animate-fade-in order-first md:order-last">
               <img
                 src={heroImage}
                 alt="Medical consultation platform"
@@ -62,68 +62,68 @@ const Index = () => {
       </section>
 
       {/* Features Section */}
-      <section className="py-20 bg-muted/30">
+      <section className="py-12 sm:py-20 bg-muted/30">
         <div className="container mx-auto px-4">
-          <h3 className="text-4xl font-bold text-center mb-16">
-            Why Choose MediConnect?
+          <h3 className="text-3xl sm:text-4xl font-bold text-center mb-8 sm:mb-16">
+            Why Choose MaviCare?
           </h3>
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="bg-card p-8 rounded-xl shadow-soft hover:shadow-medium transition-all">
-              <div className="w-14 h-14 bg-gradient-hero rounded-lg flex items-center justify-center mb-4">
-                <Calendar className="h-7 w-7 text-primary-foreground" />
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+            <div className="bg-card p-6 sm:p-8 rounded-xl shadow-soft hover:shadow-medium transition-all">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-hero rounded-lg flex items-center justify-center mb-3 sm:mb-4">
+                <Calendar className="h-6 w-6 sm:h-7 sm:w-7 text-primary-foreground" />
               </div>
-              <h4 className="text-2xl font-semibold mb-3">Easy Booking</h4>
-              <p className="text-muted-foreground">
+              <h4 className="text-xl sm:text-2xl font-semibold mb-2 sm:mb-3">Easy Booking</h4>
+              <p className="text-sm sm:text-base text-muted-foreground">
                 Schedule appointments with verified doctors in just a few clicks. Choose your preferred time and date.
               </p>
             </div>
             
-            <div className="bg-card p-8 rounded-xl shadow-soft hover:shadow-medium transition-all">
-              <div className="w-14 h-14 bg-gradient-hero rounded-lg flex items-center justify-center mb-4">
-                <Video className="h-7 w-7 text-primary-foreground" />
+            <div className="bg-card p-6 sm:p-8 rounded-xl shadow-soft hover:shadow-medium transition-all">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-hero rounded-lg flex items-center justify-center mb-3 sm:mb-4">
+                <Video className="h-6 w-6 sm:h-7 sm:w-7 text-primary-foreground" />
               </div>
-              <h4 className="text-2xl font-semibold mb-3">Video Consultations</h4>
-              <p className="text-muted-foreground">
+              <h4 className="text-xl sm:text-2xl font-semibold mb-2 sm:mb-3">Video Consultations</h4>
+              <p className="text-sm sm:text-base text-muted-foreground">
                 Connect with your doctor face-to-face through secure video calls from the comfort of your home.
               </p>
             </div>
             
-            <div className="bg-card p-8 rounded-xl shadow-soft hover:shadow-medium transition-all">
-              <div className="w-14 h-14 bg-gradient-hero rounded-lg flex items-center justify-center mb-4">
-                <FileText className="h-7 w-7 text-primary-foreground" />
+            <div className="bg-card p-6 sm:p-8 rounded-xl shadow-soft hover:shadow-medium transition-all">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-hero rounded-lg flex items-center justify-center mb-3 sm:mb-4">
+                <FileText className="h-6 w-6 sm:h-7 sm:w-7 text-primary-foreground" />
               </div>
-              <h4 className="text-2xl font-semibold mb-3">Medical Records</h4>
-              <p className="text-muted-foreground">
+              <h4 className="text-xl sm:text-2xl font-semibold mb-2 sm:mb-3">Medical Records</h4>
+              <p className="text-sm sm:text-base text-muted-foreground">
                 Access your complete medical history anytime. Share records securely with your healthcare providers.
               </p>
             </div>
             
-            <div className="bg-card p-8 rounded-xl shadow-soft hover:shadow-medium transition-all">
-              <div className="w-14 h-14 bg-gradient-hero rounded-lg flex items-center justify-center mb-4">
-                <Shield className="h-7 w-7 text-primary-foreground" />
+            <div className="bg-card p-6 sm:p-8 rounded-xl shadow-soft hover:shadow-medium transition-all">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-hero rounded-lg flex items-center justify-center mb-3 sm:mb-4">
+                <Shield className="h-6 w-6 sm:h-7 sm:w-7 text-primary-foreground" />
               </div>
-              <h4 className="text-2xl font-semibold mb-3">Secure & Private</h4>
-              <p className="text-muted-foreground">
+              <h4 className="text-xl sm:text-2xl font-semibold mb-2 sm:mb-3">Secure & Private</h4>
+              <p className="text-sm sm:text-base text-muted-foreground">
                 Bank-level encryption ensures your medical data stays confidential and protected at all times.
               </p>
             </div>
             
-            <div className="bg-card p-8 rounded-xl shadow-soft hover:shadow-medium transition-all">
-              <div className="w-14 h-14 bg-gradient-hero rounded-lg flex items-center justify-center mb-4">
-                <Clock className="h-7 w-7 text-primary-foreground" />
+            <div className="bg-card p-6 sm:p-8 rounded-xl shadow-soft hover:shadow-medium transition-all">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-hero rounded-lg flex items-center justify-center mb-3 sm:mb-4">
+                <Clock className="h-6 w-6 sm:h-7 sm:w-7 text-primary-foreground" />
               </div>
-              <h4 className="text-2xl font-semibold mb-3">24/7 Availability</h4>
-              <p className="text-muted-foreground">
+              <h4 className="text-xl sm:text-2xl font-semibold mb-2 sm:mb-3">24/7 Availability</h4>
+              <p className="text-sm sm:text-base text-muted-foreground">
                 Find doctors available round the clock for urgent consultations and emergency care.
               </p>
             </div>
             
-            <div className="bg-card p-8 rounded-xl shadow-soft hover:shadow-medium transition-all">
-              <div className="w-14 h-14 bg-gradient-hero rounded-lg flex items-center justify-center mb-4">
-                <Users className="h-7 w-7 text-primary-foreground" />
+            <div className="bg-card p-6 sm:p-8 rounded-xl shadow-soft hover:shadow-medium transition-all">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-hero rounded-lg flex items-center justify-center mb-3 sm:mb-4">
+                <Users className="h-6 w-6 sm:h-7 sm:w-7 text-primary-foreground" />
               </div>
-              <h4 className="text-2xl font-semibold mb-3">Verified Doctors</h4>
-              <p className="text-muted-foreground">
+              <h4 className="text-xl sm:text-2xl font-semibold mb-2 sm:mb-3">Verified Doctors</h4>
+              <p className="text-sm sm:text-base text-muted-foreground">
                 All doctors are verified healthcare professionals with proper credentials and licenses.
               </p>
             </div>
@@ -132,17 +132,17 @@ const Index = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-4">
+      <section className="py-12 sm:py-20 px-4">
         <div className="container mx-auto">
-          <div className="bg-gradient-hero rounded-3xl p-12 text-center text-primary-foreground shadow-strong">
-            <h3 className="text-4xl md:text-5xl font-bold mb-6">
+          <div className="bg-gradient-hero rounded-2xl sm:rounded-3xl p-8 sm:p-12 text-center text-primary-foreground shadow-strong">
+            <h3 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6">
               Ready to Get Started?
             </h3>
-            <p className="text-xl mb-8 opacity-90">
-              Join thousands of patients and doctors using MediConnect for quality healthcare
+            <p className="text-lg sm:text-xl mb-6 sm:mb-8 opacity-90">
+              Join thousands of patients and doctors using MaviCare for quality healthcare
             </p>
             <Link to="/auth">
-              <Button size="lg" variant="secondary" className="text-lg px-10">
+              <Button size="lg" variant="secondary" className="text-base sm:text-lg px-8 sm:px-10">
                 Create Your Account
               </Button>
             </Link>
@@ -151,9 +151,9 @@ const Index = () => {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-border py-8 px-4">
-        <div className="container mx-auto text-center text-muted-foreground">
-          <p>&copy; 2024 MediConnect. Your health, our priority.</p>
+      <footer className="border-t border-border py-6 sm:py-8 px-4">
+        <div className="container mx-auto text-center text-sm sm:text-base text-muted-foreground">
+          <p>&copy; 2024 MaviCare. Your health, our priority.</p>
         </div>
       </footer>
     </div>

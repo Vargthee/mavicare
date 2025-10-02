@@ -72,6 +72,7 @@ const Auth = () => {
             full_name: fullName,
             role: role,
           },
+          emailRedirectTo: `${window.location.origin}/`,
         },
       });
 
@@ -79,7 +80,7 @@ const Auth = () => {
 
       toast({
         title: "Account created!",
-        description: "Welcome to MediConnect. Please complete your profile.",
+        description: "Welcome to MaviCare. Please complete your profile.",
       });
 
       // Redirect based on role
@@ -100,13 +101,13 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-muted px-4 py-12">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-muted px-4 py-8 sm:py-12">
       <Card className="w-full max-w-md shadow-strong">
         <CardHeader className="space-y-1">
-          <CardTitle className="text-3xl font-bold text-center bg-gradient-hero bg-clip-text text-transparent">
-            MediConnect
+          <CardTitle className="text-2xl sm:text-3xl font-bold text-center bg-gradient-hero bg-clip-text text-transparent">
+            MaviCare
           </CardTitle>
-          <CardDescription className="text-center">
+          <CardDescription className="text-center text-sm sm:text-base">
             {isSignUp ? "Create your account" : "Sign in to your account"}
           </CardDescription>
         </CardHeader>

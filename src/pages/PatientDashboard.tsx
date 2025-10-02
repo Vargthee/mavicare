@@ -75,22 +75,24 @@ const PatientDashboard = () => {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="border-b border-border bg-card/50 backdrop-blur-sm">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <h1 className="text-2xl font-bold bg-gradient-hero bg-clip-text text-transparent">
-            MediConnect
+        <div className="container mx-auto px-4 py-3 sm:py-4 flex flex-wrap justify-between items-center gap-2">
+          <h1 className="text-xl sm:text-2xl font-bold bg-gradient-hero bg-clip-text text-transparent">
+            MaviCare
           </h1>
-          <div className="flex items-center gap-4">
-            <span className="text-muted-foreground">Welcome, {user?.full_name}</span>
+          <div className="flex items-center gap-2 sm:gap-4">
+            <span className="text-sm sm:text-base text-muted-foreground truncate max-w-[150px] sm:max-w-none">
+              Welcome, {user?.full_name}
+            </span>
             <Button variant="ghost" size="icon" onClick={handleSignOut}>
-              <LogOut className="h-5 w-5" />
+              <LogOut className="h-4 w-4 sm:h-5 sm:w-5" />
             </Button>
           </div>
         </div>
       </header>
 
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-6 sm:py-8">
         {/* Quick Actions */}
-        <div className="grid md:grid-cols-3 gap-6 mb-8">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
           <Card className="hover:shadow-medium transition-shadow cursor-pointer" onClick={() => navigate("/doctors")}>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
