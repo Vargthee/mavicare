@@ -40,7 +40,14 @@ const Doctors = () => {
       const { data, error } = await supabase
         .from("doctor_profiles")
         .select(`
-          *,
+          id,
+          bio,
+          specialization,
+          years_of_experience,
+          consultation_fee,
+          verified,
+          available_days,
+          available_hours,
           profile:id (
             id,
             full_name,
