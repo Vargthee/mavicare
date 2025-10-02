@@ -214,7 +214,47 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      public_doctor_profiles: {
+        Row: {
+          available_days: string[] | null
+          available_hours: string | null
+          bio: string | null
+          consultation_fee: number | null
+          id: string | null
+          specialization: string | null
+          verified: boolean | null
+          years_of_experience: number | null
+        }
+        Insert: {
+          available_days?: string[] | null
+          available_hours?: string | null
+          bio?: string | null
+          consultation_fee?: number | null
+          id?: string | null
+          specialization?: string | null
+          verified?: boolean | null
+          years_of_experience?: number | null
+        }
+        Update: {
+          available_days?: string[] | null
+          available_hours?: string | null
+          bio?: string | null
+          consultation_fee?: number | null
+          id?: string | null
+          specialization?: string | null
+          verified?: boolean | null
+          years_of_experience?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "doctor_profiles_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       [_ in never]: never
