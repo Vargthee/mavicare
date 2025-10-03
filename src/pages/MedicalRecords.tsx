@@ -118,30 +118,31 @@ const MedicalRecords = () => {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-40">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <div className="flex items-center gap-4">
+        <div className="container mx-auto px-4 py-3 sm:py-4 flex flex-wrap justify-between items-center gap-2">
+          <div className="flex items-center gap-2 sm:gap-4">
             <Button variant="ghost" size="icon" onClick={() => navigate(-1)}>
-              <ArrowLeft className="h-5 w-5" />
+              <ArrowLeft className="h-4 w-4 sm:h-5 sm:w-5" />
             </Button>
-            <h1 className="text-2xl font-bold bg-gradient-hero bg-clip-text text-transparent">
+            <h1 className="text-lg sm:text-2xl font-bold bg-gradient-hero bg-clip-text text-transparent">
               Medical Records
             </h1>
           </div>
           <div className="flex gap-2">
             {userRole === "doctor" && (
-              <Button onClick={() => setShowUpload(true)}>
+              <Button size="sm" className="sm:size-default" onClick={() => setShowUpload(true)}>
                 <Upload className="h-4 w-4 mr-2" />
-                Upload Record
+                <span className="hidden sm:inline">Upload Record</span>
+                <span className="sm:hidden">Upload</span>
               </Button>
             )}
-            <Button variant="outline" onClick={() => navigate(userRole === "doctor" ? "/doctor-dashboard" : "/patient-dashboard")}>
+            <Button size="sm" className="sm:size-default" variant="outline" onClick={() => navigate(userRole === "doctor" ? "/doctor-dashboard" : "/patient-dashboard")}>
               Dashboard
             </Button>
           </div>
         </div>
       </header>
 
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-6 sm:py-8">
         {records.length === 0 ? (
           <Card>
             <CardContent className="flex flex-col items-center justify-center py-12">
@@ -160,11 +161,11 @@ const MedicalRecords = () => {
             {records.map((record) => (
               <Card key={record.id} className="hover:shadow-medium transition-shadow">
                 <CardHeader>
-                  <div className="flex items-start justify-between">
-                    <div className="space-y-2">
-                      <CardTitle className="flex items-center gap-2">
-                        <FileText className="h-5 w-5 text-primary" />
-                        {record.title}
+                  <div className="flex flex-col sm:flex-row items-start justify-between gap-3">
+                    <div className="space-y-2 flex-1">
+                      <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+                        <FileText className="h-4 w-4 sm:h-5 sm:w-5 text-primary flex-shrink-0" />
+                        <span className="break-words">{record.title}</span>
                       </CardTitle>
                       <CardDescription className="space-y-1">
                         <div className="flex items-center gap-2 text-sm">

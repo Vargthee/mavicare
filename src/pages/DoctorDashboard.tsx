@@ -181,9 +181,9 @@ const DoctorDashboard = () => {
         </div>
 
         {/* Today's Schedule */}
-        <Card className="mb-8">
+        <Card className="mb-6 sm:mb-8">
           <CardHeader>
-            <CardTitle>Today's Schedule</CardTitle>
+            <CardTitle className="text-lg sm:text-xl">Today's Schedule</CardTitle>
             <CardDescription>Your appointments for today</CardDescription>
           </CardHeader>
           <CardContent>
@@ -202,28 +202,31 @@ const DoctorDashboard = () => {
                   .map((appointment) => (
                     <div
                       key={appointment.id}
-                      className="flex items-center justify-between p-4 border border-border rounded-lg hover:bg-muted/50 transition-colors"
+                      className="flex flex-col sm:flex-row sm:items-center justify-between p-4 border border-border rounded-lg hover:bg-muted/50 transition-colors gap-3"
                     >
-                      <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 bg-gradient-hero rounded-full flex items-center justify-center">
-                          <Users className="h-6 w-6 text-primary-foreground" />
+                      <div className="flex items-center gap-3 sm:gap-4">
+                        <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-hero rounded-full flex items-center justify-center flex-shrink-0">
+                          <Users className="h-5 w-5 sm:h-6 sm:w-6 text-primary-foreground" />
                         </div>
-                        <div>
-                          <p className="font-semibold">{appointment.patient.full_name}</p>
-                          <p className="text-sm text-muted-foreground">
+                        <div className="min-w-0 flex-1">
+                          <p className="font-semibold text-sm sm:text-base truncate">{appointment.patient.full_name}</p>
+                          <p className="text-xs sm:text-sm text-muted-foreground">
                             {new Date(appointment.appointment_date).toLocaleTimeString()}
                           </p>
                         </div>
                       </div>
-                      <div className="flex gap-2">
+                      <div className="flex gap-2 w-full sm:w-auto">
                         <Button
                           size="sm"
+                          className="flex-1 sm:flex-initial"
                           onClick={() => handleStartConsultation(appointment)}
                         >
-                          Start Consultation
+                          <span className="hidden sm:inline">Start Consultation</span>
+                          <span className="sm:hidden">Start</span>
                         </Button>
-                        <Button size="sm" variant="outline" onClick={() => navigate("/medical-records")}>
-                          View Records
+                        <Button size="sm" variant="outline" className="flex-1 sm:flex-initial" onClick={() => navigate("/medical-records")}>
+                          <span className="hidden sm:inline">View Records</span>
+                          <span className="sm:hidden">Records</span>
                         </Button>
                       </div>
                     </div>
@@ -234,7 +237,7 @@ const DoctorDashboard = () => {
         </Card>
 
         {/* Quick Actions */}
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
           <Card className="hover:shadow-medium transition-shadow cursor-pointer">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
