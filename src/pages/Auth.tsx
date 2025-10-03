@@ -8,6 +8,19 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
+import { z } from "zod";
+
+const signInSchema = z.object({
+  email: z.string().trim().email("Invalid email address").max(255, "Email too long"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+});
+
+const signUpSchema = z.object({
+  email: z.string().trim().email("Invalid email address").max(255, "Email too long"),
+  password: z.string().min(8, "Password must be at least 8 characters").max(100, "Password too long"),
+  fullName: z.string().trim().min(2, "Name must be at least 2 characters").max(100, "Name too long"),
+  role: z.enum(["patient", "doctor"]),
+});
 
 const Auth = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -24,9 +37,12 @@ const Auth = () => {
     setIsLoading(true);
 
     try {
+      // Validate input
+      const validated = signInSchema.parse({ email, password });
+
       const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
+        email: validated.email,
+        password: validated.password,
       });
 
       if (error) throw error;
@@ -36,24 +52,32 @@ const Auth = () => {
         description: "You've successfully signed in.",
       });
 
-      // Redirect based on role
-      const { data: profile } = await supabase
-        .from("profiles")
+      // Redirect based on role from user_roles table
+      const { data: userRole } = await supabase
+        .from("user_roles")
         .select("role")
-        .eq("id", data.user.id)
+        .eq("user_id", data.user.id)
         .single();
 
-      if (profile?.role === "doctor") {
+      if (userRole?.role === "doctor") {
         navigate("/doctor-dashboard");
       } else {
         navigate("/patient-dashboard");
       }
     } catch (error: any) {
-      toast({
-        title: "Error",
-        description: error.message,
-        variant: "destructive",
-      });
+      if (error instanceof z.ZodError) {
+        toast({
+          title: "Validation Error",
+          description: error.errors[0].message,
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Error",
+          description: error.message,
+          variant: "destructive",
+        });
+      }
     } finally {
       setIsLoading(false);
     }
@@ -64,13 +88,16 @@ const Auth = () => {
     setIsLoading(true);
 
     try {
+      // Validate input
+      const validated = signUpSchema.parse({ email, password, fullName, role });
+
       const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
+        email: validated.email,
+        password: validated.password,
         options: {
           data: {
-            full_name: fullName,
-            role: role,
+            full_name: validated.fullName,
+            role: validated.role,
           },
           emailRedirectTo: `${window.location.origin}/`,
         },
@@ -84,17 +111,25 @@ const Auth = () => {
       });
 
       // Redirect based on role
-      if (role === "doctor") {
+      if (validated.role === "doctor") {
         navigate("/doctor-dashboard");
       } else {
         navigate("/patient-dashboard");
       }
     } catch (error: any) {
-      toast({
-        title: "Error",
-        description: error.message,
-        variant: "destructive",
-      });
+      if (error instanceof z.ZodError) {
+        toast({
+          title: "Validation Error",
+          description: error.errors[0].message,
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Error",
+          description: error.message,
+          variant: "destructive",
+        });
+      }
     } finally {
       setIsLoading(false);
     }

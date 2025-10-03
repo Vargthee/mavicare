@@ -29,16 +29,23 @@ const DoctorDashboard = () => {
       return;
     }
 
+    // Check user role from user_roles table
+    const { data: userRole } = await supabase
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", user.id)
+      .single();
+
+    if (userRole?.role !== "doctor") {
+      navigate("/patient-dashboard");
+      return;
+    }
+
     const { data: profile } = await supabase
       .from("profiles")
       .select("*")
       .eq("id", user.id)
       .single();
-
-    if (profile?.role !== "doctor") {
-      navigate("/patient-dashboard");
-      return;
-    }
 
     const { data: docProfile } = await supabase
       .from("doctor_profiles")

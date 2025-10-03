@@ -28,13 +28,14 @@ const MedicalRecords = () => {
       return;
     }
 
-    const { data: profile } = await supabase
-      .from("profiles")
+    // Get role from user_roles table
+    const { data: userRole } = await supabase
+      .from("user_roles")
       .select("role")
-      .eq("id", user.id)
+      .eq("user_id", user.id)
       .single();
 
-    setUserRole(profile?.role || "");
+    setUserRole(userRole?.role || "");
   };
 
   const fetchRecords = async () => {
@@ -59,16 +60,16 @@ const MedicalRecords = () => {
         `)
         .order("created_at", { ascending: false });
 
-      // Filter based on user role
-      const { data: profile } = await supabase
-        .from("profiles")
+      // Filter based on user role from user_roles table
+      const { data: userRole } = await supabase
+        .from("user_roles")
         .select("role")
-        .eq("id", user.id)
+        .eq("user_id", user.id)
         .single();
 
-      if (profile?.role === "patient") {
+      if (userRole?.role === "patient") {
         query = query.eq("patient_id", user.id);
-      } else if (profile?.role === "doctor") {
+      } else if (userRole?.role === "doctor") {
         query = query.eq("doctor_id", user.id);
       }
 
