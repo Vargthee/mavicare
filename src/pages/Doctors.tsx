@@ -98,28 +98,28 @@ const Doctors = () => {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-40">
-        <div className="container mx-auto px-4 py-3 sm:py-4 flex justify-between items-center">
-          <div className="flex items-center gap-2 sm:gap-4">
+        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+          <div className="flex items-center gap-4">
             <Button variant="ghost" size="icon" onClick={() => navigate(-1)}>
-              <ArrowLeft className="h-4 w-4 sm:h-5 sm:w-5" />
+              <ArrowLeft className="h-5 w-5" />
             </Button>
-            <h1 className="text-lg sm:text-2xl font-bold bg-gradient-hero bg-clip-text text-transparent">
+            <h1 className="text-2xl font-bold bg-gradient-hero bg-clip-text text-transparent">
               Find Doctors
             </h1>
           </div>
-          <Button size="sm" className="sm:size-default" onClick={() => navigate("/patient-dashboard")}>Dashboard</Button>
+          <Button onClick={() => navigate("/patient-dashboard")}>Dashboard</Button>
         </div>
       </header>
 
-      <div className="container mx-auto px-4 py-6 sm:py-8">
+      <div className="container mx-auto px-4 py-8">
         {/* Search Bar */}
-        <div className="mb-6 sm:mb-8">
+        <div className="mb-8">
           <div className="relative max-w-2xl mx-auto">
-            <Search className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground" />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
             <Input
               type="text"
               placeholder="Search by name or specialization..."
-              className="pl-10 sm:pl-12 h-12 sm:h-14 text-base sm:text-lg"
+              className="pl-12 h-14 text-lg"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -136,17 +136,19 @@ const Doctors = () => {
             {filteredDoctors.map((doctor) => (
               <Card key={doctor.id} className="hover:shadow-medium transition-shadow">
                 <CardHeader>
-                  <div className="flex items-start gap-3 sm:gap-4">
-                    <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-hero rounded-full flex items-center justify-center text-lg sm:text-2xl font-bold text-primary-foreground flex-shrink-0">
-                      {doctor.profile.full_name.charAt(0)}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <CardTitle className="text-base sm:text-xl truncate">Dr. {doctor.profile.full_name}</CardTitle>
-                      <CardDescription className="mt-1">
-                        <Badge variant="secondary" className="mt-1 text-xs">
-                          {doctor.specialization}
-                        </Badge>
-                      </CardDescription>
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-center gap-4">
+                      <div className="w-16 h-16 bg-gradient-hero rounded-full flex items-center justify-center text-2xl font-bold text-primary-foreground">
+                        {doctor.profile.full_name.charAt(0)}
+                      </div>
+                      <div>
+                        <CardTitle className="text-xl">Dr. {doctor.profile.full_name}</CardTitle>
+                        <CardDescription className="mt-1">
+                          <Badge variant="secondary" className="mt-1">
+                            {doctor.specialization}
+                          </Badge>
+                        </CardDescription>
+                      </div>
                     </div>
                   </div>
                 </CardHeader>

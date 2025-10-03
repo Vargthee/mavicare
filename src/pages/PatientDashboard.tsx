@@ -5,16 +5,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Calendar, FileText, Video, LogOut, User } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { ProfileSettingsDialog } from "@/components/ProfileSettingsDialog";
-import { VideoCallDialog } from "@/components/VideoCallDialog";
 
 const PatientDashboard = () => {
   const [user, setUser] = useState<any>(null);
   const [appointments, setAppointments] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [profileDialogOpen, setProfileDialogOpen] = useState(false);
-  const [videoCallOpen, setVideoCallOpen] = useState(false);
-  const [selectedAppointment, setSelectedAppointment] = useState<any>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -72,11 +67,6 @@ const PatientDashboard = () => {
     navigate("/");
   };
 
-  const handleJoinCall = (appointment: any) => {
-    setSelectedAppointment(appointment);
-    setVideoCallOpen(true);
-  };
-
   if (loading) {
     return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
   }
@@ -123,7 +113,7 @@ const PatientDashboard = () => {
             </CardHeader>
           </Card>
 
-          <Card className="hover:shadow-medium transition-shadow cursor-pointer" onClick={() => setProfileDialogOpen(true)}>
+          <Card className="hover:shadow-medium transition-shadow cursor-pointer">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <User className="h-5 w-5 text-primary" />
@@ -153,37 +143,28 @@ const PatientDashboard = () => {
                 {appointments.map((appointment) => (
                   <div
                     key={appointment.id}
-                    className="flex flex-col sm:flex-row sm:items-center justify-between p-4 border border-border rounded-lg hover:bg-muted/50 transition-colors gap-3"
+                    className="flex items-center justify-between p-4 border border-border rounded-lg hover:bg-muted/50 transition-colors"
                   >
-                    <div className="flex items-center gap-3 sm:gap-4">
-                      <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-hero rounded-full flex items-center justify-center flex-shrink-0">
-                        <User className="h-5 w-5 sm:h-6 sm:w-6 text-primary-foreground" />
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 bg-gradient-hero rounded-full flex items-center justify-center">
+                        <User className="h-6 w-6 text-primary-foreground" />
                       </div>
-                      <div className="min-w-0 flex-1">
-                        <p className="font-semibold text-sm sm:text-base truncate">{appointment.doctor.full_name}</p>
-                        <p className="text-xs sm:text-sm text-muted-foreground truncate">
+                      <div>
+                        <p className="font-semibold">{appointment.doctor.full_name}</p>
+                        <p className="text-sm text-muted-foreground">
                           {appointment.doctor.doctor_profiles?.[0]?.specialization}
                         </p>
-                        <p className="text-xs sm:text-sm text-muted-foreground">
+                        <p className="text-sm text-muted-foreground">
                           {new Date(appointment.appointment_date).toLocaleString()}
                         </p>
                       </div>
                     </div>
-                    <div className="flex gap-2 w-full sm:w-auto">
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className="flex-1 sm:flex-initial"
-                        onClick={() => handleJoinCall(appointment)}
-                      >
+                    <div className="flex gap-2">
+                      <Button size="sm" variant="outline">
                         <Video className="h-4 w-4 mr-2" />
-                        <span className="hidden sm:inline">Join Call</span>
-                        <span className="sm:hidden">Join</span>
+                        Join Call
                       </Button>
-                      <Button size="sm" variant="outline" className="flex-1 sm:flex-initial">
-                        <span className="hidden sm:inline">View Details</span>
-                        <span className="sm:hidden">Details</span>
-                      </Button>
+                      <Button size="sm" variant="outline">View Details</Button>
                     </div>
                   </div>
                 ))}
@@ -192,22 +173,6 @@ const PatientDashboard = () => {
           </CardContent>
         </Card>
       </div>
-
-      <ProfileSettingsDialog
-        open={profileDialogOpen}
-        onOpenChange={setProfileDialogOpen}
-        user={user}
-        onUpdate={checkUser}
-      />
-
-      {selectedAppointment && (
-        <VideoCallDialog
-          open={videoCallOpen}
-          onOpenChange={setVideoCallOpen}
-          appointmentId={selectedAppointment.id}
-          userName={selectedAppointment.doctor.full_name}
-        />
-      )}
     </div>
   );
 };

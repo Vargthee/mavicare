@@ -56,21 +56,7 @@ export type Database = {
             foreignKeyName: "appointments_doctor_id_fkey"
             columns: ["doctor_id"]
             isOneToOne: false
-            referencedRelation: "appointment_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "appointments_doctor_id_fkey"
-            columns: ["doctor_id"]
-            isOneToOne: false
             referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "appointments_patient_id_fkey"
-            columns: ["patient_id"]
-            isOneToOne: false
-            referencedRelation: "appointment_profiles"
             referencedColumns: ["id"]
           },
           {
@@ -117,13 +103,6 @@ export type Database = {
           years_of_experience?: number | null
         }
         Relationships: [
-          {
-            foreignKeyName: "doctor_profiles_id_fkey"
-            columns: ["id"]
-            isOneToOne: true
-            referencedRelation: "appointment_profiles"
-            referencedColumns: ["id"]
-          },
           {
             foreignKeyName: "doctor_profiles_id_fkey"
             columns: ["id"]
@@ -188,21 +167,7 @@ export type Database = {
             foreignKeyName: "medical_records_doctor_id_fkey"
             columns: ["doctor_id"]
             isOneToOne: false
-            referencedRelation: "appointment_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "medical_records_doctor_id_fkey"
-            columns: ["doctor_id"]
-            isOneToOne: false
             referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "medical_records_patient_id_fkey"
-            columns: ["patient_id"]
-            isOneToOne: false
-            referencedRelation: "appointment_profiles"
             referencedColumns: ["id"]
           },
           {
@@ -249,30 +214,6 @@ export type Database = {
       }
     }
     Views: {
-      appointment_profiles: {
-        Row: {
-          avatar_url: string | null
-          created_at: string | null
-          full_name: string | null
-          id: string | null
-          role: Database["public"]["Enums"]["user_role"] | null
-        }
-        Insert: {
-          avatar_url?: string | null
-          created_at?: string | null
-          full_name?: string | null
-          id?: string | null
-          role?: Database["public"]["Enums"]["user_role"] | null
-        }
-        Update: {
-          avatar_url?: string | null
-          created_at?: string | null
-          full_name?: string | null
-          id?: string | null
-          role?: Database["public"]["Enums"]["user_role"] | null
-        }
-        Relationships: []
-      }
       public_doctor_profiles: {
         Row: {
           available_days: string[] | null
@@ -305,13 +246,6 @@ export type Database = {
           years_of_experience?: number | null
         }
         Relationships: [
-          {
-            foreignKeyName: "doctor_profiles_id_fkey"
-            columns: ["id"]
-            isOneToOne: true
-            referencedRelation: "appointment_profiles"
-            referencedColumns: ["id"]
-          },
           {
             foreignKeyName: "doctor_profiles_id_fkey"
             columns: ["id"]
