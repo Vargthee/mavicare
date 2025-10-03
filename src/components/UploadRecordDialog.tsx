@@ -48,7 +48,7 @@ const UploadRecordDialog = ({ open, onClose }: UploadRecordDialogProps) => {
       
       const { data: patientData } = await supabase
         .from("profiles")
-        .select("id, full_name, email")
+        .select("id, full_name")
         .in("id", patientIds);
       
       setPatients(patientData || []);
@@ -142,7 +142,7 @@ const UploadRecordDialog = ({ open, onClose }: UploadRecordDialogProps) => {
               <SelectContent>
                 {patients.map((patient) => (
                   <SelectItem key={patient.id} value={patient.id}>
-                    {patient.full_name} ({patient.email})
+                    {patient.full_name}
                   </SelectItem>
                 ))}
               </SelectContent>
