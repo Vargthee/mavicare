@@ -37,29 +37,32 @@ const Doctors = () => {
 
   const fetchDoctors = async () => {
     try {
+      // Use the secure doctor_public_info view that only exposes safe fields
       const { data, error } = await supabase
-        .from("doctor_profiles")
-        .select(`
-          id,
-          bio,
-          specialization,
-          years_of_experience,
-          consultation_fee,
-          verified,
-          available_days,
-          available_hours,
-          profile:id (
-            id,
-            full_name,
-            email,
-            avatar_url
-          )
-        `)
-        .eq("verified", true);
+        .from("doctor_public_info")
+        .select("*");
 
       if (error) throw error;
-      setDoctors(data || []);
-      setFilteredDoctors(data || []);
+      
+      // Transform data to match expected structure
+      const formattedDoctors = (data || []).map((doc: any) => ({
+        id: doc.id,
+        bio: doc.bio,
+        specialization: doc.specialization,
+        years_of_experience: doc.years_of_experience,
+        consultation_fee: doc.consultation_fee,
+        verified: doc.verified,
+        available_days: doc.available_days,
+        available_hours: doc.available_hours,
+        profile: {
+          id: doc.id,
+          full_name: doc.full_name,
+          avatar_url: doc.avatar_url
+        }
+      }));
+      
+      setDoctors(formattedDoctors);
+      setFilteredDoctors(formattedDoctors);
     } catch (error: any) {
       toast({
         title: "Error",
