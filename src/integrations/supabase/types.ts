@@ -222,31 +222,52 @@ export type Database = {
       }
       profiles: {
         Row: {
+          allergies: string | null
           avatar_url: string | null
+          blood_type: string | null
+          chronic_conditions: string | null
           created_at: string | null
+          current_medications: string | null
           email: string
           full_name: string
+          height_cm: number | null
           id: string
+          medical_history: string | null
           phone: string | null
           updated_at: string | null
+          weight_kg: number | null
         }
         Insert: {
+          allergies?: string | null
           avatar_url?: string | null
+          blood_type?: string | null
+          chronic_conditions?: string | null
           created_at?: string | null
+          current_medications?: string | null
           email: string
           full_name: string
+          height_cm?: number | null
           id: string
+          medical_history?: string | null
           phone?: string | null
           updated_at?: string | null
+          weight_kg?: number | null
         }
         Update: {
+          allergies?: string | null
           avatar_url?: string | null
+          blood_type?: string | null
+          chronic_conditions?: string | null
           created_at?: string | null
+          current_medications?: string | null
           email?: string
           full_name?: string
+          height_cm?: number | null
           id?: string
+          medical_history?: string | null
           phone?: string | null
           updated_at?: string | null
+          weight_kg?: number | null
         }
         Relationships: []
       }
