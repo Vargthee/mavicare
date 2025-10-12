@@ -40,11 +40,18 @@ const Auth = () => {
       // Validate input
       const validated = signInSchema.parse({ email, password });
 
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email: validated.email,
-        password: validated.password,
-      });
+      // Parallel fetch for faster auth
+      const [authResult, userRoleResult] = await Promise.all([
+        supabase.auth.signInWithPassword({
+          email: validated.email,
+          password: validated.password,
+        }),
+        supabase.auth.getUser().then(({ data: { user } }) => 
+          user ? supabase.from("user_roles").select("role").eq("user_id", user.id).single() : null
+        )
+      ]);
 
+      const { data, error } = authResult;
       if (error) throw error;
 
       toast({
@@ -52,12 +59,16 @@ const Auth = () => {
         description: "You've successfully signed in.",
       });
 
-      // Redirect based on role from user_roles table
-      const { data: userRole } = await supabase
-        .from("user_roles")
-        .select("role")
-        .eq("user_id", data.user.id)
-        .single();
+      // Get role from parallel fetch or fetch now if needed
+      let userRole = userRoleResult?.data;
+      if (!userRole && data.user) {
+        const { data: roleData } = await supabase
+          .from("user_roles")
+          .select("role")
+          .eq("user_id", data.user.id)
+          .single();
+        userRole = roleData;
+      }
 
       if (userRole?.role === "doctor") {
         navigate("/doctor-dashboard");

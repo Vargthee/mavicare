@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Calendar, Video, FileText, Shield, Clock, Users } from "lucide-react";
-import heroImage from "@/assets/hero-medical.jpg";
+import heroImage from "@/assets/hero-nigerian-medical.jpg";
 
 const Index = () => {
   return (

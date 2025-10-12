@@ -22,6 +22,8 @@ const DoctorProfileSetup = ({ onComplete }: DoctorProfileSetupProps) => {
     consultation_fee: "",
     available_days: [] as string[],
     available_hours: "",
+    account_number: "",
+    bank_name: "",
   });
   const { toast } = useToast();
 
@@ -53,6 +55,8 @@ const DoctorProfileSetup = ({ onComplete }: DoctorProfileSetupProps) => {
         consultation_fee: parseFloat(formData.consultation_fee),
         available_days: formData.available_days,
         available_hours: formData.available_hours,
+        account_number: formData.account_number,
+        bank_name: formData.bank_name,
       });
 
       if (error) throw error;
@@ -122,12 +126,12 @@ const DoctorProfileSetup = ({ onComplete }: DoctorProfileSetupProps) => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="fee">Consultation Fee ($)</Label>
+                <Label htmlFor="fee">Consultation Fee (₦)</Label>
                 <Input
                   id="fee"
                   type="number"
                   step="0.01"
-                  placeholder="e.g., 100.00"
+                  placeholder="e.g., 15000.00"
                   value={formData.consultation_fee}
                   onChange={(e) => setFormData({ ...formData, consultation_fee: e.target.value })}
                 />
@@ -170,6 +174,28 @@ const DoctorProfileSetup = ({ onComplete }: DoctorProfileSetupProps) => {
                 value={formData.available_hours}
                 onChange={(e) => setFormData({ ...formData, available_hours: e.target.value })}
               />
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="bank_name">Bank Name</Label>
+                <Input
+                  id="bank_name"
+                  placeholder="e.g., Access Bank"
+                  value={formData.bank_name}
+                  onChange={(e) => setFormData({ ...formData, bank_name: e.target.value })}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="account_number">Account Number</Label>
+                <Input
+                  id="account_number"
+                  placeholder="e.g., 0123456789"
+                  value={formData.account_number}
+                  onChange={(e) => setFormData({ ...formData, account_number: e.target.value })}
+                />
+              </div>
             </div>
 
             <Button type="submit" className="w-full" disabled={loading}>

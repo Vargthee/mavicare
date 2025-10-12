@@ -98,8 +98,10 @@ export type Database = {
       }
       doctor_profiles: {
         Row: {
+          account_number: string | null
           available_days: string[] | null
           available_hours: string | null
+          bank_name: string | null
           bio: string | null
           consultation_fee: number | null
           id: string
@@ -109,8 +111,10 @@ export type Database = {
           years_of_experience: number | null
         }
         Insert: {
+          account_number?: string | null
           available_days?: string[] | null
           available_hours?: string | null
+          bank_name?: string | null
           bio?: string | null
           consultation_fee?: number | null
           id: string
@@ -120,8 +124,10 @@ export type Database = {
           years_of_experience?: number | null
         }
         Update: {
+          account_number?: string | null
           available_days?: string[] | null
           available_hours?: string | null
+          bank_name?: string | null
           bio?: string | null
           consultation_fee?: number | null
           id?: string

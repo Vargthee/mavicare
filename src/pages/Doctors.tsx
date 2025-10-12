@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Search, Calendar, DollarSign, Clock, ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import BookingDialog from "@/components/BookingDialog";
@@ -94,7 +95,41 @@ const Doctors = () => {
   };
 
   if (loading) {
-    return <div className="min-h-screen flex items-center justify-center">Loading doctors...</div>;
+    return (
+      <div className="min-h-screen bg-background">
+        <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-40">
+          <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+            <Skeleton className="h-8 w-32" />
+            <Skeleton className="h-10 w-24" />
+          </div>
+        </header>
+        <div className="container mx-auto px-4 py-8">
+          <div className="mb-8">
+            <Skeleton className="h-14 max-w-2xl mx-auto" />
+          </div>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+            {[1, 2, 3, 4, 5, 6].map((i) => (
+              <Card key={i} className="p-6">
+                <div className="flex items-center gap-4 mb-4">
+                  <Skeleton className="w-16 h-16 rounded-full" />
+                  <div className="space-y-2 flex-1">
+                    <Skeleton className="h-5 w-32" />
+                    <Skeleton className="h-4 w-24" />
+                  </div>
+                </div>
+                <Skeleton className="h-16 w-full mb-4" />
+                <div className="space-y-2">
+                  <Skeleton className="h-4 w-full" />
+                  <Skeleton className="h-4 w-full" />
+                  <Skeleton className="h-4 w-3/4" />
+                </div>
+                <Skeleton className="h-10 w-full mt-4" />
+              </Card>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -171,7 +206,7 @@ const Doctors = () => {
                     {doctor.consultation_fee && (
                       <div className="flex items-center gap-2 text-sm">
                         <DollarSign className="h-4 w-4 text-primary" />
-                        <span>${doctor.consultation_fee} per consultation</span>
+                        <span>₦{Number(doctor.consultation_fee).toLocaleString()} per consultation</span>
                       </div>
                     )}
                     

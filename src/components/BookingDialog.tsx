@@ -125,9 +125,18 @@ const BookingDialog = ({ doctor, open, onClose }: BookingDialogProps) => {
           </div>
 
           {doctor.consultation_fee && (
-            <div className="bg-muted p-4 rounded-lg">
-              <p className="text-sm text-muted-foreground">Consultation Fee</p>
-              <p className="text-2xl font-bold text-primary">${doctor.consultation_fee}</p>
+            <div className="bg-muted p-4 rounded-lg space-y-2">
+              <div>
+                <p className="text-sm text-muted-foreground">Consultation Fee</p>
+                <p className="text-2xl font-bold text-primary">₦{Number(doctor.consultation_fee).toLocaleString()}</p>
+              </div>
+              {doctor.bank_name && doctor.account_number && (
+                <div className="text-sm border-t pt-2 mt-2">
+                  <p className="font-medium">Payment Details:</p>
+                  <p className="text-muted-foreground">{doctor.bank_name}</p>
+                  <p className="text-muted-foreground">{doctor.account_number}</p>
+                </div>
+              )}
             </div>
           )}
 
