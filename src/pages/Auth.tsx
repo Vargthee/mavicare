@@ -7,7 +7,6 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2 } from "lucide-react";
 import { z } from "zod";
 
 const signInSchema = z.object({
@@ -23,7 +22,6 @@ const signUpSchema = z.object({
 });
 
 const Auth = () => {
-  const [isLoading, setIsLoading] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -34,7 +32,6 @@ const Auth = () => {
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
 
     try {
       // Validate input
@@ -89,14 +86,11 @@ const Auth = () => {
           variant: "destructive",
         });
       }
-    } finally {
-      setIsLoading(false);
     }
   };
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
 
     try {
       // Validate input
@@ -141,14 +135,32 @@ const Auth = () => {
           variant: "destructive",
         });
       }
-    } finally {
-      setIsLoading(false);
+    }
+  };
+
+  const handleGuestSignIn = async () => {
+    try {
+      const { error } = await supabase.auth.signInAnonymously();
+      if (error) throw error;
+
+      toast({
+        title: "Welcome!",
+        description: "You're browsing as a guest.",
+      });
+
+      navigate("/patient-dashboard");
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
     }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-muted px-4 py-8 sm:py-12">
-      <Card className="w-full max-w-md shadow-strong">
+      <Card className="w-full max-w-md shadow-strong glass-strong">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl sm:text-3xl font-bold text-center bg-gradient-hero bg-clip-text text-transparent">
             MaviCare
@@ -191,15 +203,16 @@ const Auth = () => {
                     required
                   />
                 </div>
-                <Button type="submit" className="w-full" disabled={isLoading}>
-                  {isLoading ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Signing in...
-                    </>
-                  ) : (
-                    "Sign In"
-                  )}
+                <Button type="submit" className="w-full transition-all hover:scale-105">
+                  Sign In
+                </Button>
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  className="w-full transition-all hover:scale-105"
+                  onClick={handleGuestSignIn}
+                >
+                  Continue as Guest
                 </Button>
               </form>
             </TabsContent>
@@ -259,15 +272,8 @@ const Auth = () => {
                     </Button>
                   </div>
                 </div>
-                <Button type="submit" className="w-full" disabled={isLoading}>
-                  {isLoading ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Creating account...
-                    </>
-                  ) : (
-                    "Create Account"
-                  )}
+                <Button type="submit" className="w-full transition-all hover:scale-105">
+                  Create Account
                 </Button>
               </form>
             </TabsContent>

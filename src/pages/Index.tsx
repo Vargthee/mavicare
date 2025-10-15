@@ -1,23 +1,22 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Calendar, Video, FileText, Shield, Clock, Users } from "lucide-react";
-import heroImage from "@/assets/hero-nigerian-medical.jpg";
 
 const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       {/* Navigation */}
-      <nav className="border-b border-border bg-card/50 backdrop-blur-sm fixed w-full z-50">
+      <nav className="glass fixed w-full z-50">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-4 flex justify-between items-center">
           <h1 className="text-xl sm:text-2xl font-bold bg-gradient-hero bg-clip-text text-transparent">
             MaviCare
           </h1>
           <div className="flex gap-2 sm:gap-4">
             <Link to="/auth">
-              <Button variant="ghost" size="sm" className="sm:size-default">Sign In</Button>
+              <Button variant="ghost" size="sm" className="sm:size-default transition-all hover:scale-105">Sign In</Button>
             </Link>
             <Link to="/auth">
-              <Button size="sm" className="sm:size-default">Get Started</Button>
+              <Button size="sm" className="sm:size-default transition-all hover:scale-105">Get Started</Button>
             </Link>
           </div>
         </div>
@@ -26,36 +25,27 @@ const Index = () => {
       {/* Hero Section */}
       <section className="pt-24 sm:pt-32 pb-12 sm:pb-20 px-4">
         <div className="container mx-auto">
-          <div className="grid md:grid-cols-2 gap-8 sm:gap-12 items-center">
-            <div className="space-y-4 sm:space-y-6 animate-fade-in">
-              <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight">
-                Healthcare at Your{" "}
-                <span className="bg-gradient-hero bg-clip-text text-transparent">
-                  Fingertips
-                </span>
-              </h2>
-              <p className="text-lg sm:text-xl text-muted-foreground">
-                Connect with verified doctors, book consultations, and manage your medical records securely - all in one place.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-2 sm:pt-4">
-                <Link to="/auth" className="w-full sm:w-auto">
-                  <Button size="lg" className="w-full sm:w-auto text-base sm:text-lg px-6 sm:px-8">
-                    Book Consultation
-                  </Button>
-                </Link>
-                <Link to="/auth" className="w-full sm:w-auto">
-                  <Button size="lg" variant="outline" className="w-full sm:w-auto text-base sm:text-lg px-6 sm:px-8">
-                    Join as Doctor
-                  </Button>
-                </Link>
-              </div>
-            </div>
-            <div className="relative animate-fade-in order-first md:order-last">
-              <img
-                src={heroImage}
-                alt="Medical consultation platform"
-                className="rounded-2xl shadow-strong w-full"
-              />
+          <div className="max-w-4xl mx-auto text-center space-y-4 sm:space-y-6 animate-fade-in">
+            <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight">
+              Healthcare at Your{" "}
+              <span className="bg-gradient-hero bg-clip-text text-transparent">
+                Fingertips
+              </span>
+            </h2>
+            <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto">
+              Connect with verified doctors, book consultations, and manage your medical records securely - all in one place.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-2 sm:pt-4 justify-center">
+              <Link to="/auth" className="w-full sm:w-auto">
+                <Button size="lg" className="w-full sm:w-auto text-base sm:text-lg px-6 sm:px-8 transition-all hover:scale-105 hover:shadow-lg">
+                  Book Consultation
+                </Button>
+              </Link>
+              <Link to="/auth" className="w-full sm:w-auto">
+                <Button size="lg" variant="outline" className="w-full sm:w-auto text-base sm:text-lg px-6 sm:px-8 transition-all hover:scale-105">
+                  Join as Doctor
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
@@ -68,8 +58,8 @@ const Index = () => {
             Why Choose MaviCare?
           </h3>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-            <div className="bg-card p-6 sm:p-8 rounded-xl shadow-soft hover:shadow-medium transition-all">
-              <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-hero rounded-lg flex items-center justify-center mb-3 sm:mb-4">
+            <div className="glass-strong p-6 sm:p-8 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-xl group">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-hero rounded-lg flex items-center justify-center mb-3 sm:mb-4 transition-transform group-hover:scale-110">
                 <Calendar className="h-6 w-6 sm:h-7 sm:w-7 text-primary-foreground" />
               </div>
               <h4 className="text-xl sm:text-2xl font-semibold mb-2 sm:mb-3">Easy Booking</h4>
@@ -78,8 +68,8 @@ const Index = () => {
               </p>
             </div>
             
-            <div className="bg-card p-6 sm:p-8 rounded-xl shadow-soft hover:shadow-medium transition-all">
-              <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-hero rounded-lg flex items-center justify-center mb-3 sm:mb-4">
+            <div className="glass-strong p-6 sm:p-8 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-xl group">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-hero rounded-lg flex items-center justify-center mb-3 sm:mb-4 transition-transform group-hover:scale-110">
                 <Video className="h-6 w-6 sm:h-7 sm:w-7 text-primary-foreground" />
               </div>
               <h4 className="text-xl sm:text-2xl font-semibold mb-2 sm:mb-3">Video Consultations</h4>
@@ -88,8 +78,8 @@ const Index = () => {
               </p>
             </div>
             
-            <div className="bg-card p-6 sm:p-8 rounded-xl shadow-soft hover:shadow-medium transition-all">
-              <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-hero rounded-lg flex items-center justify-center mb-3 sm:mb-4">
+            <div className="glass-strong p-6 sm:p-8 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-xl group">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-hero rounded-lg flex items-center justify-center mb-3 sm:mb-4 transition-transform group-hover:scale-110">
                 <FileText className="h-6 w-6 sm:h-7 sm:w-7 text-primary-foreground" />
               </div>
               <h4 className="text-xl sm:text-2xl font-semibold mb-2 sm:mb-3">Medical Records</h4>
@@ -98,8 +88,8 @@ const Index = () => {
               </p>
             </div>
             
-            <div className="bg-card p-6 sm:p-8 rounded-xl shadow-soft hover:shadow-medium transition-all">
-              <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-hero rounded-lg flex items-center justify-center mb-3 sm:mb-4">
+            <div className="glass-strong p-6 sm:p-8 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-xl group">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-hero rounded-lg flex items-center justify-center mb-3 sm:mb-4 transition-transform group-hover:scale-110">
                 <Shield className="h-6 w-6 sm:h-7 sm:w-7 text-primary-foreground" />
               </div>
               <h4 className="text-xl sm:text-2xl font-semibold mb-2 sm:mb-3">Secure & Private</h4>
@@ -108,8 +98,8 @@ const Index = () => {
               </p>
             </div>
             
-            <div className="bg-card p-6 sm:p-8 rounded-xl shadow-soft hover:shadow-medium transition-all">
-              <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-hero rounded-lg flex items-center justify-center mb-3 sm:mb-4">
+            <div className="glass-strong p-6 sm:p-8 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-xl group">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-hero rounded-lg flex items-center justify-center mb-3 sm:mb-4 transition-transform group-hover:scale-110">
                 <Clock className="h-6 w-6 sm:h-7 sm:w-7 text-primary-foreground" />
               </div>
               <h4 className="text-xl sm:text-2xl font-semibold mb-2 sm:mb-3">24/7 Availability</h4>
@@ -118,8 +108,8 @@ const Index = () => {
               </p>
             </div>
             
-            <div className="bg-card p-6 sm:p-8 rounded-xl shadow-soft hover:shadow-medium transition-all">
-              <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-hero rounded-lg flex items-center justify-center mb-3 sm:mb-4">
+            <div className="glass-strong p-6 sm:p-8 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-xl group">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-hero rounded-lg flex items-center justify-center mb-3 sm:mb-4 transition-transform group-hover:scale-110">
                 <Users className="h-6 w-6 sm:h-7 sm:w-7 text-primary-foreground" />
               </div>
               <h4 className="text-xl sm:text-2xl font-semibold mb-2 sm:mb-3">Verified Doctors</h4>
@@ -142,7 +132,7 @@ const Index = () => {
               Join thousands of patients and doctors using MaviCare for quality healthcare
             </p>
             <Link to="/auth">
-              <Button size="lg" variant="secondary" className="text-base sm:text-lg px-8 sm:px-10">
+              <Button size="lg" variant="secondary" className="text-base sm:text-lg px-8 sm:px-10 transition-all hover:scale-105 hover:shadow-xl">
                 Create Your Account
               </Button>
             </Link>
