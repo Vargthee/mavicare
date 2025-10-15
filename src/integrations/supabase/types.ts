@@ -228,8 +228,8 @@ export type Database = {
           chronic_conditions: string | null
           created_at: string | null
           current_medications: string | null
-          email: string
-          full_name: string
+          email: string | null
+          full_name: string | null
           height_cm: number | null
           id: string
           medical_history: string | null
@@ -244,8 +244,8 @@ export type Database = {
           chronic_conditions?: string | null
           created_at?: string | null
           current_medications?: string | null
-          email: string
-          full_name: string
+          email?: string | null
+          full_name?: string | null
           height_cm?: number | null
           id: string
           medical_history?: string | null
@@ -260,8 +260,8 @@ export type Database = {
           chronic_conditions?: string | null
           created_at?: string | null
           current_medications?: string | null
-          email?: string
-          full_name?: string
+          email?: string | null
+          full_name?: string | null
           height_cm?: number | null
           id?: string
           medical_history?: string | null
