@@ -9,7 +9,7 @@ const Index = () => {
       <nav className="glass fixed w-full z-50">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-4 flex justify-between items-center">
           <h1 className="text-xl sm:text-2xl font-bold bg-gradient-hero bg-clip-text text-transparent">
-            MaviCare
+            Medweb Care
           </h1>
           <div className="flex gap-2 sm:gap-4">
             <Link to="/auth">
@@ -55,7 +55,7 @@ const Index = () => {
       <section className="py-12 sm:py-20 bg-muted/30">
         <div className="container mx-auto px-4">
           <h3 className="text-3xl sm:text-4xl font-bold text-center mb-8 sm:mb-16">
-            Why Choose MaviCare?
+            Why Choose Medweb Care?
           </h3>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             <div className="glass-strong p-6 sm:p-8 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-xl group">
@@ -129,7 +129,7 @@ const Index = () => {
               Ready to Get Started?
             </h3>
             <p className="text-lg sm:text-xl mb-6 sm:mb-8 opacity-90">
-              Join thousands of patients and doctors using MaviCare for quality healthcare
+              Join thousands of patients and doctors using Medweb Care for quality healthcare
             </p>
             <Link to="/auth">
               <Button size="lg" variant="secondary" className="text-base sm:text-lg px-8 sm:px-10 transition-all hover:scale-105 hover:shadow-xl">
@@ -143,7 +143,7 @@ const Index = () => {
       {/* Footer */}
       <footer className="border-t border-border py-6 sm:py-8 px-4">
         <div className="container mx-auto text-center text-sm sm:text-base text-muted-foreground">
-          <p>&copy; 2024 MaviCare. Your health, our priority.</p>
+          <p>&copy; 2024 Medweb Care. Your health, our priority.</p>
         </div>
       </footer>
     </div>

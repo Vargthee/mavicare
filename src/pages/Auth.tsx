@@ -112,7 +112,7 @@ const Auth = () => {
 
       toast({
         title: "Account created!",
-        description: "Welcome to MaviCare. Please complete your profile.",
+        description: "Welcome to Medweb Care. Please complete your profile.",
       });
 
       // Redirect based on role
@@ -163,7 +163,7 @@ const Auth = () => {
       <Card className="w-full max-w-md shadow-strong glass-strong">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl sm:text-3xl font-bold text-center bg-gradient-hero bg-clip-text text-transparent">
-            MaviCare
+            Medweb Care
           </CardTitle>
           <CardDescription className="text-center text-sm sm:text-base">
             {isSignUp ? "Create your account" : "Sign in to your account"}

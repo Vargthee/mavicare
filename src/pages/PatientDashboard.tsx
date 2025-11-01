@@ -86,7 +86,7 @@ const PatientDashboard = () => {
       <header className="border-b border-border bg-card/50 backdrop-blur-sm">
         <div className="container mx-auto px-4 py-3 sm:py-4 flex flex-wrap justify-between items-center gap-2">
           <h1 className="text-xl sm:text-2xl font-bold bg-gradient-hero bg-clip-text text-transparent">
-            MaviCare
+            Medweb Care
           </h1>
           <div className="flex items-center gap-2 sm:gap-4">
             <span className="text-sm sm:text-base text-muted-foreground truncate max-w-[150px] sm:max-w-none">
