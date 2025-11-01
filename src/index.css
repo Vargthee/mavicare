@@ -53,7 +53,9 @@ All colors MUST be HSL.
     --shadow-strong: 0 8px 24px hsl(210 85% 45% / 0.16);
 
     /* Animations */
-    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-smooth: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-fast: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     
     /* Glassmorphism */
     --glass-bg: hsl(0 0% 100% / 0.1);
@@ -145,5 +147,25 @@ All colors MUST be HSL.
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid var(--glass-border);
+  }
+
+  .animate-smooth {
+    transition: var(--transition-smooth);
+  }
+
+  .animate-fast {
+    transition: var(--transition-fast);
+  }
+
+  .hover-lift {
+    @apply transition-all duration-200 hover:-translate-y-1 hover:shadow-medium;
+  }
+
+  .hover-glow {
+    @apply transition-all duration-300 hover:shadow-strong;
+  }
+
+  .skeleton {
+    @apply animate-pulse bg-muted rounded;
   }
 }

@@ -160,7 +160,7 @@ const Auth = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-muted px-4 py-8 sm:py-12">
-      <Card className="w-full max-w-md shadow-strong glass-strong">
+      <Card className="w-full max-w-md shadow-strong glass-strong animate-scale-in">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl sm:text-3xl font-bold text-center bg-gradient-hero bg-clip-text text-transparent">
             Medweb Care
@@ -203,13 +203,13 @@ const Auth = () => {
                     required
                   />
                 </div>
-                <Button type="submit" className="w-full transition-all hover:scale-105">
+                <Button type="submit" className="w-full animate-fast hover:scale-105 hover-glow">
                   Sign In
                 </Button>
                 <Button 
                   type="button" 
                   variant="outline" 
-                  className="w-full transition-all hover:scale-105"
+                  className="w-full animate-fast hover:scale-105"
                   onClick={handleGuestSignIn}
                 >
                   Continue as Guest
@@ -272,7 +272,7 @@ const Auth = () => {
                     </Button>
                   </div>
                 </div>
-                <Button type="submit" className="w-full transition-all hover:scale-105">
+                <Button type="submit" className="w-full animate-fast hover:scale-105 hover-glow">
                   Create Account
                 </Button>
               </form>

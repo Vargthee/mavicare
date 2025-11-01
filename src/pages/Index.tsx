@@ -6,17 +6,17 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       {/* Navigation */}
-      <nav className="glass fixed w-full z-50">
+      <nav className="glass fixed w-full z-50 animate-slide-up">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-4 flex justify-between items-center">
           <h1 className="text-xl sm:text-2xl font-bold bg-gradient-hero bg-clip-text text-transparent">
             Medweb Care
           </h1>
           <div className="flex gap-2 sm:gap-4">
             <Link to="/auth">
-              <Button variant="ghost" size="sm" className="sm:size-default transition-all hover:scale-105">Sign In</Button>
+              <Button variant="ghost" size="sm" className="sm:size-default animate-fast hover:scale-105">Sign In</Button>
             </Link>
             <Link to="/auth">
-              <Button size="sm" className="sm:size-default transition-all hover:scale-105">Get Started</Button>
+              <Button size="sm" className="sm:size-default animate-fast hover:scale-105 hover-glow">Get Started</Button>
             </Link>
           </div>
         </div>
@@ -37,12 +37,12 @@ const Index = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-2 sm:pt-4 justify-center">
               <Link to="/auth" className="w-full sm:w-auto">
-                <Button size="lg" className="w-full sm:w-auto text-base sm:text-lg px-6 sm:px-8 transition-all hover:scale-105 hover:shadow-lg">
+                <Button size="lg" className="w-full sm:w-auto text-base sm:text-lg px-6 sm:px-8 animate-fast hover:scale-105 hover-glow">
                   Book Consultation
                 </Button>
               </Link>
               <Link to="/auth" className="w-full sm:w-auto">
-                <Button size="lg" variant="outline" className="w-full sm:w-auto text-base sm:text-lg px-6 sm:px-8 transition-all hover:scale-105">
+                <Button size="lg" variant="outline" className="w-full sm:w-auto text-base sm:text-lg px-6 sm:px-8 animate-fast hover:scale-105">
                   Join as Doctor
                 </Button>
               </Link>
@@ -58,8 +58,8 @@ const Index = () => {
             Why Choose Medweb Care?
           </h3>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-            <div className="glass-strong p-6 sm:p-8 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-xl group">
-              <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-hero rounded-lg flex items-center justify-center mb-3 sm:mb-4 transition-transform group-hover:scale-110">
+            <div className="glass-strong p-6 sm:p-8 rounded-xl hover-lift hover-glow group animate-fade-in">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-hero rounded-lg flex items-center justify-center mb-3 sm:mb-4 animate-smooth group-hover:scale-110">
                 <Calendar className="h-6 w-6 sm:h-7 sm:w-7 text-primary-foreground" />
               </div>
               <h4 className="text-xl sm:text-2xl font-semibold mb-2 sm:mb-3">Easy Booking</h4>
@@ -68,8 +68,8 @@ const Index = () => {
               </p>
             </div>
             
-            <div className="glass-strong p-6 sm:p-8 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-xl group">
-              <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-hero rounded-lg flex items-center justify-center mb-3 sm:mb-4 transition-transform group-hover:scale-110">
+            <div className="glass-strong p-6 sm:p-8 rounded-xl hover-lift hover-glow group animate-fade-in [animation-delay:100ms]">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-hero rounded-lg flex items-center justify-center mb-3 sm:mb-4 animate-smooth group-hover:scale-110">
                 <Video className="h-6 w-6 sm:h-7 sm:w-7 text-primary-foreground" />
               </div>
               <h4 className="text-xl sm:text-2xl font-semibold mb-2 sm:mb-3">Video Consultations</h4>
@@ -78,8 +78,8 @@ const Index = () => {
               </p>
             </div>
             
-            <div className="glass-strong p-6 sm:p-8 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-xl group">
-              <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-hero rounded-lg flex items-center justify-center mb-3 sm:mb-4 transition-transform group-hover:scale-110">
+            <div className="glass-strong p-6 sm:p-8 rounded-xl hover-lift hover-glow group animate-fade-in [animation-delay:200ms]">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-hero rounded-lg flex items-center justify-center mb-3 sm:mb-4 animate-smooth group-hover:scale-110">
                 <FileText className="h-6 w-6 sm:h-7 sm:w-7 text-primary-foreground" />
               </div>
               <h4 className="text-xl sm:text-2xl font-semibold mb-2 sm:mb-3">Medical Records</h4>
@@ -88,8 +88,8 @@ const Index = () => {
               </p>
             </div>
             
-            <div className="glass-strong p-6 sm:p-8 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-xl group">
-              <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-hero rounded-lg flex items-center justify-center mb-3 sm:mb-4 transition-transform group-hover:scale-110">
+            <div className="glass-strong p-6 sm:p-8 rounded-xl hover-lift hover-glow group animate-fade-in [animation-delay:300ms]">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-hero rounded-lg flex items-center justify-center mb-3 sm:mb-4 animate-smooth group-hover:scale-110">
                 <Shield className="h-6 w-6 sm:h-7 sm:w-7 text-primary-foreground" />
               </div>
               <h4 className="text-xl sm:text-2xl font-semibold mb-2 sm:mb-3">Secure & Private</h4>
@@ -98,8 +98,8 @@ const Index = () => {
               </p>
             </div>
             
-            <div className="glass-strong p-6 sm:p-8 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-xl group">
-              <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-hero rounded-lg flex items-center justify-center mb-3 sm:mb-4 transition-transform group-hover:scale-110">
+            <div className="glass-strong p-6 sm:p-8 rounded-xl hover-lift hover-glow group animate-fade-in [animation-delay:400ms]">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-hero rounded-lg flex items-center justify-center mb-3 sm:mb-4 animate-smooth group-hover:scale-110">
                 <Clock className="h-6 w-6 sm:h-7 sm:w-7 text-primary-foreground" />
               </div>
               <h4 className="text-xl sm:text-2xl font-semibold mb-2 sm:mb-3">24/7 Availability</h4>
@@ -108,8 +108,8 @@ const Index = () => {
               </p>
             </div>
             
-            <div className="glass-strong p-6 sm:p-8 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-xl group">
-              <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-hero rounded-lg flex items-center justify-center mb-3 sm:mb-4 transition-transform group-hover:scale-110">
+            <div className="glass-strong p-6 sm:p-8 rounded-xl hover-lift hover-glow group animate-fade-in [animation-delay:500ms]">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-hero rounded-lg flex items-center justify-center mb-3 sm:mb-4 animate-smooth group-hover:scale-110">
                 <Users className="h-6 w-6 sm:h-7 sm:w-7 text-primary-foreground" />
               </div>
               <h4 className="text-xl sm:text-2xl font-semibold mb-2 sm:mb-3">Verified Doctors</h4>
@@ -132,7 +132,7 @@ const Index = () => {
               Join thousands of patients and doctors using Medweb Care for quality healthcare
             </p>
             <Link to="/auth">
-              <Button size="lg" variant="secondary" className="text-base sm:text-lg px-8 sm:px-10 transition-all hover:scale-105 hover:shadow-xl">
+              <Button size="lg" variant="secondary" className="text-base sm:text-lg px-8 sm:px-10 animate-fast hover:scale-105 hover-glow">
                 Create Your Account
               </Button>
             </Link>
