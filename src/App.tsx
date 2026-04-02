@@ -5,16 +5,17 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { lazy, Suspense } from "react";
 
-// Lazy load pages for better performance
 const Index = lazy(() => import("./pages/Index"));
 const Auth = lazy(() => import("./pages/Auth"));
 const PatientDashboard = lazy(() => import("./pages/PatientDashboard"));
 const DoctorDashboard = lazy(() => import("./pages/DoctorDashboard"));
+const HospitalSetup = lazy(() => import("./pages/HospitalSetup"));
+const HospitalDashboard = lazy(() => import("./pages/HospitalDashboard"));
+const Consultation = lazy(() => import("./pages/Consultation"));
 const Doctors = lazy(() => import("./pages/Doctors"));
 const MedicalRecords = lazy(() => import("./pages/MedicalRecords"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
-// Loading component
 const PageLoader = () => (
   <div className="min-h-screen flex items-center justify-center">
     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
@@ -35,9 +36,11 @@ const App = () => (
             <Route path="/auth" element={<Auth />} />
             <Route path="/patient-dashboard" element={<PatientDashboard />} />
             <Route path="/doctor-dashboard" element={<DoctorDashboard />} />
+            <Route path="/hospital-setup" element={<HospitalSetup />} />
+            <Route path="/hospital-dashboard" element={<HospitalDashboard />} />
+            <Route path="/consultation/:id" element={<Consultation />} />
             <Route path="/doctors" element={<Doctors />} />
             <Route path="/medical-records" element={<MedicalRecords />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>
