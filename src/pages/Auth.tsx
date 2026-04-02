@@ -4,46 +4,58 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { Stethoscope, ArrowLeft } from "lucide-react";
+import { Stethoscope, Building2, User, UserCog, Shield, CheckCircle, Eye, EyeOff } from "lucide-react";
 import { z } from "zod";
+import { getUserRole, getRoleRedirect, ensureProfile, type AppRole } from "@/lib/auth";
 
 const signInSchema = z.object({
-  email: z.string().trim().email("Invalid email address").max(255),
-  password: z.string().min(6, "Password must be at least 6 characters"),
+  email: z.string().trim().email("Invalid email address"),
+  password: z.string().min(1, "Password is required"),
 });
 
 const signUpSchema = z.object({
-  email: z.string().trim().email("Invalid email address").max(255),
-  password: z.string().min(8, "Password must be at least 8 characters").max(100),
-  fullName: z.string().trim().min(2, "Name must be at least 2 characters").max(100),
-  role: z.enum(["patient", "doctor", "hospital_admin"]),
+  email: z.string().trim().email("Invalid email address"),
+  password: z.string().min(8, "Password must be at least 8 characters"),
+  fullName: z.string().trim().min(2, "Name must be at least 2 characters"),
+  role: z.enum(["patient", "doctor", "hospital_admin", "admin"]),
 });
 
-type Role = "patient" | "doctor" | "hospital_admin";
+type SignupRole = "patient" | "doctor" | "hospital_admin" | "admin";
 
-const roleConfig: Record<Role, { label: string; description: string }> = {
-  patient: { label: "Patient", description: "Book consultations with doctors" },
-  doctor: { label: "Doctor", description: "Provide care for patients" },
-  hospital_admin: { label: "Hospital Admin", description: "Manage your hospital & doctors" },
-};
+const roles: { id: SignupRole; label: string; desc: string; icon: any }[] = [
+  { id: "patient", label: "Patient", desc: "Book consultations with hospital doctors", icon: User },
+  { id: "doctor", label: "Doctor", desc: "Provide telemedicine care for patients", icon: Stethoscope },
+  { id: "hospital_admin", label: "Hospital Admin", desc: "Register & manage your hospital", icon: Building2 },
+  { id: "admin", label: "Platform Admin", desc: "Manage the Medweb Care platform", icon: Shield },
+];
+
+const features = [
+  "Real-time text consultations",
+  "Image & voice note sharing",
+  "HD voice & video calls",
+  "Secure patient records",
+];
 
 const Auth = () => {
   const [searchParams] = useSearchParams();
-  const defaultRole = (searchParams.get("role") as Role) || "patient";
+  const isSignUpDefault = searchParams.get("tab") === "signup";
+  const defaultRole = (searchParams.get("role") as SignupRole) || "patient";
 
+  const [tab, setTab] = useState<"signin" | "signup">(isSignUpDefault ? "signup" : "signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
-  const [role, setRole] = useState<Role>(defaultRole);
+  const [role, setRole] = useState<SignupRole>(defaultRole);
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
   useEffect(() => {
-    if (searchParams.get("role") === "hospital_admin") setRole("hospital_admin");
+    const r = searchParams.get("role") as SignupRole;
+    if (r && roles.find((x) => x.id === r)) setRole(r);
+    if (searchParams.get("tab") === "signup") setTab("signup");
   }, [searchParams]);
 
   const handleSignIn = async (e: React.FormEvent) => {
@@ -57,17 +69,9 @@ const Auth = () => {
       });
       if (error) throw error;
 
-      const { data: roleData } = await supabase
-        .from("user_roles")
-        .select("role")
-        .eq("user_id", data.user.id)
-        .single();
-
-      toast({ title: "Welcome back!", description: "You've successfully signed in." });
-
-      if (roleData?.role === "doctor") navigate("/doctor-dashboard");
-      else if (roleData?.role === "hospital_admin") navigate("/hospital-dashboard");
-      else navigate("/patient-dashboard");
+      const detectedRole = await getUserRole(data.user);
+      toast({ title: "Welcome back!", description: "Signed in successfully." });
+      navigate(getRoleRedirect(detectedRole));
     } catch (error: any) {
       toast({
         title: error instanceof z.ZodError ? "Validation Error" : "Sign In Failed",
@@ -84,21 +88,32 @@ const Auth = () => {
     setLoading(true);
     try {
       const validated = signUpSchema.parse({ email, password, fullName, role });
+
+      // hospital_admin maps to 'patient' in the DB enum (which only has admin/doctor/patient)
+      // We store the true intended role in metadata so the app reads it correctly.
+      const dbRole = validated.role === "hospital_admin" ? "patient" : validated.role;
+
       const { data, error } = await supabase.auth.signUp({
         email: validated.email,
         password: validated.password,
         options: {
-          data: { full_name: validated.fullName, role: validated.role },
-          emailRedirectTo: `${window.location.origin}/`,
+          data: {
+            full_name: validated.fullName,
+            role: dbRole,
+            // Store the real intended role for hospital_admin workaround
+            ...(validated.role === "hospital_admin" && { intended_role: "hospital_admin" }),
+          },
         },
       });
+
       if (error) throw error;
+      if (!data.user) throw new Error("Sign up failed. Please try again.");
+
+      // Ensure profile exists (in case the DB trigger failed or was slow)
+      await ensureProfile(data.user);
 
       toast({ title: "Account created!", description: "Welcome to Medweb Care." });
-
-      if (validated.role === "doctor") navigate("/doctor-dashboard");
-      else if (validated.role === "hospital_admin") navigate("/hospital-setup");
-      else navigate("/patient-dashboard");
+      navigate(getRoleRedirect(validated.role as AppRole));
     } catch (error: any) {
       toast({
         title: error instanceof z.ZodError ? "Validation Error" : "Sign Up Failed",
@@ -111,137 +126,238 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
-      <nav className="p-4">
-        <div className="container mx-auto flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-gradient-hero rounded-lg flex items-center justify-center">
-              <Stethoscope className="h-4 w-4 text-white" />
-            </div>
-            <span className="font-bold text-lg bg-gradient-hero bg-clip-text text-transparent">Medweb Care</span>
-          </Link>
-          <Link to="/">
-            <Button variant="ghost" size="sm">
-              <ArrowLeft className="h-4 w-4 mr-2" /> Back
-            </Button>
-          </Link>
+    <div className="min-h-screen flex">
+      {/* Left panel — branding */}
+      <div className="hidden lg:flex flex-col justify-between w-[45%] bg-gradient-hero p-10 text-white relative overflow-hidden">
+        {/* Background decoration */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute -top-24 -right-24 w-96 h-96 bg-white/5 rounded-full" />
+          <div className="absolute -bottom-24 -left-24 w-80 h-80 bg-white/5 rounded-full" />
         </div>
-      </nav>
 
-      <div className="flex-1 flex items-center justify-center px-4 py-8">
-        <Card className="w-full max-w-md shadow-medium">
-          <CardHeader className="text-center">
-            <CardTitle className="text-2xl">Welcome to Medweb Care</CardTitle>
-            <CardDescription>Sign in or create your account</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Tabs defaultValue="signin">
-              <TabsList className="grid w-full grid-cols-2 mb-6">
-                <TabsTrigger value="signin">Sign In</TabsTrigger>
-                <TabsTrigger value="signup">Sign Up</TabsTrigger>
-              </TabsList>
+        {/* Logo */}
+        <div className="flex items-center gap-3 relative z-10">
+          <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
+            <Stethoscope className="h-5 w-5 text-white" />
+          </div>
+          <span className="text-2xl font-bold">Medweb Care</span>
+        </div>
 
-              <TabsContent value="signin">
-                <form onSubmit={handleSignIn} className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="signin-email">Email</Label>
+        {/* Value prop */}
+        <div className="space-y-8 relative z-10">
+          <div className="space-y-4">
+            <h2 className="text-4xl font-bold leading-tight">
+              Telemedicine built for hospitals
+            </h2>
+            <p className="text-white/80 text-lg leading-relaxed">
+              Register your hospital, onboard your doctors, and deliver care through every channel patients need.
+            </p>
+          </div>
+          <ul className="space-y-3">
+            {features.map((f) => (
+              <li key={f} className="flex items-center gap-3">
+                <div className="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0">
+                  <CheckCircle className="h-3 w-3 text-white" />
+                </div>
+                <span className="text-white/90 text-sm">{f}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <p className="text-white/50 text-sm relative z-10">
+          &copy; 2024 Medweb Care. Healthcare infrastructure for every hospital.
+        </p>
+      </div>
+
+      {/* Right panel — form */}
+      <div className="flex-1 flex flex-col">
+        {/* Mobile logo */}
+        <div className="lg:hidden flex items-center gap-2 p-4 border-b border-border">
+          <div className="w-8 h-8 bg-gradient-hero rounded-lg flex items-center justify-center">
+            <Stethoscope className="h-4 w-4 text-white" />
+          </div>
+          <span className="font-bold bg-gradient-hero bg-clip-text text-transparent">Medweb Care</span>
+          <Link to="/" className="ml-auto text-sm text-muted-foreground hover:text-foreground">← Back</Link>
+        </div>
+
+        <div className="flex-1 flex items-center justify-center p-6 lg:p-12">
+          <div className="w-full max-w-md space-y-6">
+            <div>
+              <h1 className="text-2xl font-bold text-foreground">
+                {tab === "signin" ? "Welcome back" : "Create your account"}
+              </h1>
+              <p className="text-muted-foreground mt-1">
+                {tab === "signin"
+                  ? "Sign in to continue to Medweb Care"
+                  : "Get started in less than 2 minutes"}
+              </p>
+            </div>
+
+            {/* Tab switcher */}
+            <div className="flex bg-muted rounded-xl p-1">
+              <button
+                onClick={() => setTab("signin")}
+                className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all ${
+                  tab === "signin" ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                Sign In
+              </button>
+              <button
+                onClick={() => setTab("signup")}
+                className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all ${
+                  tab === "signup" ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                Sign Up
+              </button>
+            </div>
+
+            {tab === "signin" && (
+              <form onSubmit={handleSignIn} className="space-y-4">
+                <div className="space-y-1.5">
+                  <Label htmlFor="email">Email address</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="you@example.com"
+                    value={email}
+                    autoComplete="email"
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    data-testid="input-email"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label htmlFor="password">Password</Label>
+                  <div className="relative">
                     <Input
-                      id="signin-email"
-                      type="email"
-                      placeholder="your@email.com"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      required
-                      data-testid="input-email"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="signin-password">Password</Label>
-                    <Input
-                      id="signin-password"
-                      type="password"
+                      id="password"
+                      type={showPassword ? "text" : "password"}
+                      placeholder="Your password"
                       value={password}
+                      autoComplete="current-password"
                       onChange={(e) => setPassword(e.target.value)}
                       required
                       data-testid="input-password"
                     />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                    >
+                      {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </button>
                   </div>
-                  <Button type="submit" className="w-full" disabled={loading} data-testid="button-signin">
-                    {loading ? "Signing in..." : "Sign In"}
-                  </Button>
-                </form>
-              </TabsContent>
+                </div>
+                <Button type="submit" className="w-full h-11 text-base" disabled={loading} data-testid="button-signin">
+                  {loading ? "Signing in..." : "Sign In"}
+                </Button>
+                <p className="text-center text-sm text-muted-foreground">
+                  Don't have an account?{" "}
+                  <button type="button" className="text-primary font-medium hover:underline" onClick={() => setTab("signup")}>
+                    Sign up
+                  </button>
+                </p>
+              </form>
+            )}
 
-              <TabsContent value="signup">
-                <form onSubmit={handleSignUp} className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="signup-name">Full Name</Label>
-                    <Input
-                      id="signup-name"
-                      placeholder="Dr. John Doe"
-                      value={fullName}
-                      onChange={(e) => setFullName(e.target.value)}
-                      required
-                      data-testid="input-fullname"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="signup-email">Email</Label>
-                    <Input
-                      id="signup-email"
-                      type="email"
-                      placeholder="your@email.com"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      required
-                      data-testid="input-signup-email"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="signup-password">Password</Label>
+            {tab === "signup" && (
+              <form onSubmit={handleSignUp} className="space-y-4">
+                <div className="space-y-1.5">
+                  <Label htmlFor="fullName">Full name</Label>
+                  <Input
+                    id="fullName"
+                    placeholder="Dr. John Doe"
+                    value={fullName}
+                    autoComplete="name"
+                    onChange={(e) => setFullName(e.target.value)}
+                    required
+                    data-testid="input-fullname"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label htmlFor="signup-email">Email address</Label>
+                  <Input
+                    id="signup-email"
+                    type="email"
+                    placeholder="you@example.com"
+                    value={email}
+                    autoComplete="email"
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    data-testid="input-signup-email"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label htmlFor="signup-password">Password</Label>
+                  <div className="relative">
                     <Input
                       id="signup-password"
-                      type="password"
+                      type={showPassword ? "text" : "password"}
+                      placeholder="Min. 8 characters"
                       value={password}
+                      autoComplete="new-password"
                       onChange={(e) => setPassword(e.target.value)}
                       required
                       data-testid="input-signup-password"
                     />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                    >
+                      {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </button>
                   </div>
-                  <div className="space-y-2">
-                    <Label>I am a</Label>
-                    <div className="grid grid-cols-1 gap-2">
-                      {(Object.keys(roleConfig) as Role[]).map((r) => (
-                        <button
-                          key={r}
-                          type="button"
-                          onClick={() => setRole(r)}
-                          data-testid={`button-role-${r}`}
-                          className={`flex items-start gap-3 p-3 rounded-lg border-2 text-left transition-all ${
-                            role === r
-                              ? "border-primary bg-primary/5"
-                              : "border-border hover:border-primary/40"
-                          }`}
-                        >
-                          <div className="flex-1">
-                            <div className="font-medium text-sm">{roleConfig[r].label}</div>
-                            <div className="text-xs text-muted-foreground">{roleConfig[r].description}</div>
-                          </div>
-                          {role === r && (
-                            <div className="w-4 h-4 rounded-full bg-primary flex-shrink-0 mt-0.5" />
-                          )}
-                        </button>
-                      ))}
-                    </div>
+                </div>
+
+                <div className="space-y-1.5">
+                  <Label>I am a</Label>
+                  <div className="grid grid-cols-2 gap-2">
+                    {roles.map((r) => (
+                      <button
+                        key={r.id}
+                        type="button"
+                        onClick={() => setRole(r.id)}
+                        data-testid={`button-role-${r.id}`}
+                        className={`flex flex-col items-start p-3 rounded-xl border-2 text-left transition-all ${
+                          role === r.id
+                            ? "border-primary bg-primary/5"
+                            : "border-border hover:border-primary/40 bg-card"
+                        }`}
+                      >
+                        <div className={`w-7 h-7 rounded-lg flex items-center justify-center mb-1.5 ${
+                          role === r.id ? "bg-primary" : "bg-muted"
+                        }`}>
+                          <r.icon className={`h-3.5 w-3.5 ${role === r.id ? "text-white" : "text-muted-foreground"}`} />
+                        </div>
+                        <span className={`font-medium text-xs ${role === r.id ? "text-primary" : ""}`}>{r.label}</span>
+                        <span className="text-xs text-muted-foreground leading-tight mt-0.5">{r.desc}</span>
+                      </button>
+                    ))}
                   </div>
-                  <Button type="submit" className="w-full" disabled={loading} data-testid="button-signup">
-                    {loading ? "Creating account..." : "Create Account"}
-                  </Button>
-                </form>
-              </TabsContent>
-            </Tabs>
-          </CardContent>
-        </Card>
+                </div>
+
+                <Button type="submit" className="w-full h-11 text-base" disabled={loading} data-testid="button-signup">
+                  {loading ? "Creating account..." : "Create Account"}
+                </Button>
+
+                <p className="text-center text-sm text-muted-foreground">
+                  Already have an account?{" "}
+                  <button type="button" className="text-primary font-medium hover:underline" onClick={() => setTab("signin")}>
+                    Sign in
+                  </button>
+                </p>
+
+                <p className="text-center text-xs text-muted-foreground">
+                  By signing up you agree to our Terms of Service and Privacy Policy.
+                </p>
+              </form>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );
