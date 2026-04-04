@@ -96,9 +96,20 @@ const Consultation = () => {
 
     const { data: consult } = await supabase
       .from("consultations")
-      .select("*, patient:patient_id(id, full_name), doctor:doctor_id(id, full_name, doctor_profiles(specialization)), hospital:hospital_id(name)")
+      .select("*, hospital:hospital_id(name)")
       .eq("id", id)
-      .single();
+      .single() as { data: any };
+
+    if (consult) {
+      // Fetch patient and doctor profiles separately
+      const [patientRes, doctorRes] = await Promise.all([
+        supabase.from("profiles").select("id, full_name").eq("id", consult.patient_id).single(),
+        supabase.from("profiles").select("id, full_name").eq("id", consult.doctor_id).single(),
+      ]);
+      const { data: docProfile } = await supabase.from("doctor_profiles").select("specialization").eq("id", consult.doctor_id).single();
+      consult.patient = patientRes.data;
+      consult.doctor = { ...doctorRes.data, doctor_profiles: docProfile ? [docProfile] : [] };
+    }
 
     if (!consult) { navigate(-1); return; }
     setConsultation(consult);
