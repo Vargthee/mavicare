@@ -105,10 +105,28 @@ const Consultation = () => {
 
     const { data: msgs } = await supabase
       .from("messages")
-      .select("*, sender:sender_id(full_name)")
+      .select("*")
       .eq("consultation_id", id)
       .order("created_at", { ascending: true });
-    setMessages(msgs || []);
+
+    // Fetch sender names separately since no FK exists
+    const typedMsgs: Message[] = [];
+    if (msgs) {
+      const senderIds = [...new Set(msgs.map(m => m.sender_id))];
+      const { data: senders } = await supabase
+        .from("profiles")
+        .select("id, full_name")
+        .in("id", senderIds);
+      const senderMap = new Map(senders?.map(s => [s.id, s.full_name]) || []);
+      for (const m of msgs) {
+        typedMsgs.push({
+          ...m,
+          message_type: m.message_type as Message["message_type"],
+          sender: { full_name: senderMap.get(m.sender_id) || "Unknown" },
+        });
+      }
+    }
+    setMessages(typedMsgs);
     setLoading(false);
 
     // Subscribe to real-time messages + call signals
