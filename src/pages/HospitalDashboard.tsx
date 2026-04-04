@@ -65,11 +65,23 @@ const HospitalDashboard = () => {
 
     const { data: consults } = await supabase
       .from("consultations")
-      .select("*, patient:patient_id(full_name), doctor:doctor_id(full_name)")
+      .select("*")
       .eq("hospital_id", hosp.id)
       .order("created_at", { ascending: false })
       .limit(10);
-    setConsultations(consults || []);
+    
+    // Enrich with patient/doctor names
+    const enrichedConsults: any[] = [];
+    if (consults) {
+      for (const c of consults) {
+        const [patientRes, doctorRes] = await Promise.all([
+          supabase.from("profiles").select("full_name").eq("id", c.patient_id).single(),
+          supabase.from("profiles").select("full_name").eq("id", c.doctor_id).single(),
+        ]);
+        enrichedConsults.push({ ...c, patient: patientRes.data, doctor: doctorRes.data });
+      }
+    }
+    setConsultations(enrichedConsults);
 
     setLoading(false);
   };
