@@ -7,6 +7,8 @@ import { lazy, Suspense } from "react";
 
 const Index = lazy(() => import("./pages/Index"));
 const Auth = lazy(() => import("./pages/Auth"));
+const AdminLogin = lazy(() => import("./pages/AdminLogin"));
+const Admin = lazy(() => import("./pages/Admin"));
 const PatientDashboard = lazy(() => import("./pages/PatientDashboard"));
 const DoctorDashboard = lazy(() => import("./pages/DoctorDashboard"));
 const HospitalSetup = lazy(() => import("./pages/HospitalSetup"));
