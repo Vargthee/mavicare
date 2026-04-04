@@ -7,19 +7,25 @@ export type AppRole = "patient" | "doctor" | "hospital_admin" | "admin";
  * hospital_admin workaround), then user_roles table, then falls back to metadata.role.
  */
 export const getUserRole = async (user: any): Promise<AppRole> => {
-  // Priority 1: intended_role in metadata (used for hospital_admin workaround)
-  if (user?.user_metadata?.intended_role) {
-    return user.user_metadata.intended_role as AppRole;
-  }
-  // Priority 2: user_roles table
+  // Priority 1: user_roles table
   const { data } = await supabase
     .from("user_roles")
     .select("role")
     .eq("user_id", user.id)
     .single();
-  if (data?.role === "admin") return "admin";
-  if (data?.role === "doctor") return "doctor";
-  if (data?.role === "patient") return "patient";
+
+  if (data?.role) {
+    const dbRole = data.role as string;
+    if (dbRole === "admin") return "admin";
+    if (dbRole === "hospital_admin") return "hospital_admin";
+    if (dbRole === "doctor") return "doctor";
+    if (dbRole === "patient") return "patient";
+  }
+
+  // Priority 2: intended_role in metadata (legacy workaround)
+  if (user?.user_metadata?.intended_role) {
+    return user.user_metadata.intended_role as AppRole;
+  }
 
   // Priority 3: metadata.role
   return (user?.user_metadata?.role as AppRole) || "patient";
