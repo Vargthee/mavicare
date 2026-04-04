@@ -88,19 +88,13 @@ const Auth = () => {
     try {
       const validated = signUpSchema.parse({ email, password, fullName, role });
 
-      // hospital_admin maps to 'patient' in the DB enum (which only has admin/doctor/patient)
-      // We store the true intended role in metadata so the app reads it correctly.
-      const dbRole = validated.role === "hospital_admin" ? "patient" : validated.role;
-
       const { data, error } = await supabase.auth.signUp({
         email: validated.email,
         password: validated.password,
         options: {
           data: {
             full_name: validated.fullName,
-            role: dbRole,
-            // Store the real intended role for hospital_admin workaround
-            ...(validated.role === "hospital_admin" && { intended_role: "hospital_admin" }),
+            role: validated.role,
           },
         },
       });
