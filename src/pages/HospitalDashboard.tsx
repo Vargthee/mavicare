@@ -34,7 +34,7 @@ const HospitalDashboard = () => {
 
     const { data: roleData } = await supabase
       .from("user_roles").select("role").eq("user_id", user.id).single();
-    if (roleData?.role !== "hospital_admin") { navigate("/"); return; }
+    if (roleData?.role !== "hospital_admin" as any) { navigate("/"); return; }
 
     const { data: hosp } = await supabase
       .from("hospitals").select("*").eq("admin_id", user.id).single();
