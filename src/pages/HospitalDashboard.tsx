@@ -44,9 +44,24 @@ const HospitalDashboard = () => {
 
     const { data: hospDoctors } = await supabase
       .from("hospital_doctors")
-      .select("*, doctor:doctor_id(id, full_name, email, doctor_profiles(specialization))")
+      .select("*")
       .eq("hospital_id", hosp.id);
-    setDoctors(hospDoctors || []);
+    
+    // Fetch doctor profiles separately
+    const enrichedDoctors: any[] = [];
+    if (hospDoctors) {
+      for (const hd of hospDoctors) {
+        const [profileRes, docProfileRes] = await Promise.all([
+          supabase.from("profiles").select("id, full_name, email").eq("id", hd.doctor_id).single(),
+          supabase.from("doctor_profiles").select("specialization").eq("id", hd.doctor_id).single(),
+        ]);
+        enrichedDoctors.push({
+          ...hd,
+          doctor: { ...profileRes.data, doctor_profiles: docProfileRes.data ? [docProfileRes.data] : [] },
+        });
+      }
+    }
+    setDoctors(enrichedDoctors);
 
     const { data: consults } = await supabase
       .from("consultations")
