@@ -27,7 +27,6 @@ const roles: { id: SignupRole; label: string; desc: string; icon: any }[] = [
   { id: "patient", label: "Patient", desc: "Book consultations with hospital doctors", icon: User },
   { id: "doctor", label: "Doctor", desc: "Provide telemedicine care for patients", icon: Stethoscope },
   { id: "hospital_admin", label: "Hospital Admin", desc: "Register & manage your hospital", icon: Building2 },
-  { id: "admin", label: "Platform Admin", desc: "Manage the Medweb Care platform", icon: Shield },
 ];
 
 const features = [

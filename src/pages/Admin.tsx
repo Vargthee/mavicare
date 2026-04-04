@@ -56,17 +56,17 @@ const Admin = () => {
 
   const fetchData = async () => {
     const [hospRes, consultRes] = await Promise.all([
-      supabase.from("hospitals").select("*, hospital_doctors(count)").order("created_at", { ascending: false }),
-      supabase.from("consultations").select("id, status", { count: "exact" }),
+      supabase.from("hospitals").select("*").order("created_at", { ascending: false }),
+      supabase.from("consultations").select("id, status"),
     ]);
 
-    const hospData = hospRes.data || [];
+    const hospData = (hospRes.data || []) as any[];
     setHospitals(hospData);
     setStats({
       hospitals: hospData.length,
-      consultations: consultRes.count || 0,
+      consultations: consultRes.data?.length || 0,
       users: 0,
-      active: hospData.filter((h) => h.subscription_status === "active").length,
+      active: hospData.filter((h: any) => h.subscription_status === "active").length,
     });
   };
 
