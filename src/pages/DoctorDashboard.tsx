@@ -48,18 +48,40 @@ const DoctorDashboard = () => {
     // Find their hospital
     const { data: hospLink } = await supabase
       .from("hospital_doctors")
-      .select("*, hospital:hospital_id(id, name, subscription_plan, subscription_status)")
+      .select("*")
       .eq("doctor_id", u.id)
       .single();
-    setHospital(hospLink?.hospital || null);
+    
+    if (hospLink) {
+      const { data: hospData } = await supabase
+        .from("hospitals")
+        .select("id, name, subscription_plan, subscription_status")
+        .eq("id", hospLink.hospital_id)
+        .single();
+      setHospital(hospData || null);
+    }
 
     // Fetch consultations
     const { data: consults } = await supabase
       .from("consultations")
-      .select("*, patient:patient_id(id, full_name, phone), hospital:hospital_id(name)")
+      .select("*")
       .eq("doctor_id", u.id)
       .order("created_at", { ascending: false });
-    setConsultations(consults || []);
+    
+    // Enrich with patient/hospital info
+    const enriched: any[] = [];
+    if (consults) {
+      for (const c of consults) {
+        const { data: patient } = await supabase.from("profiles").select("id, full_name, phone").eq("id", c.patient_id).single();
+        let hospName = null;
+        if (c.hospital_id) {
+          const { data: h } = await supabase.from("hospitals").select("name").eq("id", c.hospital_id).single();
+          hospName = h;
+        }
+        enriched.push({ ...c, patient, hospital: hospName });
+      }
+    }
+    setConsultations(enriched);
 
     setLoading(false);
   };

@@ -27,7 +27,6 @@ const roles: { id: SignupRole; label: string; desc: string; icon: any }[] = [
   { id: "patient", label: "Patient", desc: "Book consultations with hospital doctors", icon: User },
   { id: "doctor", label: "Doctor", desc: "Provide telemedicine care for patients", icon: Stethoscope },
   { id: "hospital_admin", label: "Hospital Admin", desc: "Register & manage your hospital", icon: Building2 },
-  { id: "admin", label: "Platform Admin", desc: "Manage the Medweb Care platform", icon: Shield },
 ];
 
 const features = [
@@ -89,19 +88,13 @@ const Auth = () => {
     try {
       const validated = signUpSchema.parse({ email, password, fullName, role });
 
-      // hospital_admin maps to 'patient' in the DB enum (which only has admin/doctor/patient)
-      // We store the true intended role in metadata so the app reads it correctly.
-      const dbRole = validated.role === "hospital_admin" ? "patient" : validated.role;
-
       const { data, error } = await supabase.auth.signUp({
         email: validated.email,
         password: validated.password,
         options: {
           data: {
             full_name: validated.fullName,
-            role: dbRole,
-            // Store the real intended role for hospital_admin workaround
-            ...(validated.role === "hospital_admin" && { intended_role: "hospital_admin" }),
+            role: validated.role,
           },
         },
       });

@@ -34,7 +34,7 @@ const HospitalDashboard = () => {
 
     const { data: roleData } = await supabase
       .from("user_roles").select("role").eq("user_id", user.id).single();
-    if (roleData?.role !== "hospital_admin") { navigate("/"); return; }
+    if (roleData?.role !== "hospital_admin" as any) { navigate("/"); return; }
 
     const { data: hosp } = await supabase
       .from("hospitals").select("*").eq("admin_id", user.id).single();
@@ -44,17 +44,44 @@ const HospitalDashboard = () => {
 
     const { data: hospDoctors } = await supabase
       .from("hospital_doctors")
-      .select("*, doctor:doctor_id(id, full_name, email, doctor_profiles(specialization))")
+      .select("*")
       .eq("hospital_id", hosp.id);
-    setDoctors(hospDoctors || []);
+    
+    // Fetch doctor profiles separately
+    const enrichedDoctors: any[] = [];
+    if (hospDoctors) {
+      for (const hd of hospDoctors) {
+        const [profileRes, docProfileRes] = await Promise.all([
+          supabase.from("profiles").select("id, full_name, email").eq("id", hd.doctor_id).single(),
+          supabase.from("doctor_profiles").select("specialization").eq("id", hd.doctor_id).single(),
+        ]);
+        enrichedDoctors.push({
+          ...hd,
+          doctor: { ...profileRes.data, doctor_profiles: docProfileRes.data ? [docProfileRes.data] : [] },
+        });
+      }
+    }
+    setDoctors(enrichedDoctors);
 
     const { data: consults } = await supabase
       .from("consultations")
-      .select("*, patient:patient_id(full_name), doctor:doctor_id(full_name)")
+      .select("*")
       .eq("hospital_id", hosp.id)
       .order("created_at", { ascending: false })
       .limit(10);
-    setConsultations(consults || []);
+    
+    // Enrich with patient/doctor names
+    const enrichedConsults: any[] = [];
+    if (consults) {
+      for (const c of consults) {
+        const [patientRes, doctorRes] = await Promise.all([
+          supabase.from("profiles").select("full_name").eq("id", c.patient_id).single(),
+          supabase.from("profiles").select("full_name").eq("id", c.doctor_id).single(),
+        ]);
+        enrichedConsults.push({ ...c, patient: patientRes.data, doctor: doctorRes.data });
+      }
+    }
+    setConsultations(enrichedConsults);
 
     setLoading(false);
   };

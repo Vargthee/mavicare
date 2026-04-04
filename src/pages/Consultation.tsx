@@ -96,19 +96,48 @@ const Consultation = () => {
 
     const { data: consult } = await supabase
       .from("consultations")
-      .select("*, patient:patient_id(id, full_name), doctor:doctor_id(id, full_name, doctor_profiles(specialization)), hospital:hospital_id(name)")
+      .select("*, hospital:hospital_id(name)")
       .eq("id", id)
-      .single();
+      .single() as { data: any };
+
+    if (consult) {
+      // Fetch patient and doctor profiles separately
+      const [patientRes, doctorRes] = await Promise.all([
+        supabase.from("profiles").select("id, full_name").eq("id", consult.patient_id).single(),
+        supabase.from("profiles").select("id, full_name").eq("id", consult.doctor_id).single(),
+      ]);
+      const { data: docProfile } = await supabase.from("doctor_profiles").select("specialization").eq("id", consult.doctor_id).single();
+      consult.patient = patientRes.data;
+      consult.doctor = { ...doctorRes.data, doctor_profiles: docProfile ? [docProfile] : [] };
+    }
 
     if (!consult) { navigate(-1); return; }
     setConsultation(consult);
 
     const { data: msgs } = await supabase
       .from("messages")
-      .select("*, sender:sender_id(full_name)")
+      .select("*")
       .eq("consultation_id", id)
       .order("created_at", { ascending: true });
-    setMessages(msgs || []);
+
+    // Fetch sender names separately since no FK exists
+    const typedMsgs: Message[] = [];
+    if (msgs) {
+      const senderIds = [...new Set(msgs.map(m => m.sender_id))];
+      const { data: senders } = await supabase
+        .from("profiles")
+        .select("id, full_name")
+        .in("id", senderIds);
+      const senderMap = new Map(senders?.map(s => [s.id, s.full_name]) || []);
+      for (const m of msgs) {
+        typedMsgs.push({
+          ...m,
+          message_type: m.message_type as Message["message_type"],
+          sender: { full_name: senderMap.get(m.sender_id) || "Unknown" },
+        });
+      }
+    }
+    setMessages(typedMsgs);
     setLoading(false);
 
     // Subscribe to real-time messages + call signals
