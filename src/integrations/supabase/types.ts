@@ -82,6 +82,47 @@ export type Database = {
           },
         ]
       }
+      consultations: {
+        Row: {
+          chief_complaint: string | null
+          created_at: string
+          doctor_id: string
+          hospital_id: string | null
+          id: string
+          patient_id: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          chief_complaint?: string | null
+          created_at?: string
+          doctor_id: string
+          hospital_id?: string | null
+          id?: string
+          patient_id: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          chief_complaint?: string | null
+          created_at?: string
+          doctor_id?: string
+          hospital_id?: string | null
+          id?: string
+          patient_id?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "consultations_hospital_id_fkey"
+            columns: ["hospital_id"]
+            isOneToOne: false
+            referencedRelation: "hospitals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       doctor_profiles: {
         Row: {
           account_number: string | null
@@ -138,6 +179,77 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      hospital_doctors: {
+        Row: {
+          created_at: string
+          doctor_id: string
+          hospital_id: string
+          id: string
+        }
+        Insert: {
+          created_at?: string
+          doctor_id: string
+          hospital_id: string
+          id?: string
+        }
+        Update: {
+          created_at?: string
+          doctor_id?: string
+          hospital_id?: string
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hospital_doctors_hospital_id_fkey"
+            columns: ["hospital_id"]
+            isOneToOne: false
+            referencedRelation: "hospitals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hospitals: {
+        Row: {
+          address: string | null
+          admin_id: string
+          created_at: string
+          email: string | null
+          id: string
+          name: string
+          phone: string | null
+          subscription_expires_at: string | null
+          subscription_plan: string
+          subscription_status: string
+          updated_at: string
+        }
+        Insert: {
+          address?: string | null
+          admin_id: string
+          created_at?: string
+          email?: string | null
+          id?: string
+          name: string
+          phone?: string | null
+          subscription_expires_at?: string | null
+          subscription_plan?: string
+          subscription_status?: string
+          updated_at?: string
+        }
+        Update: {
+          address?: string | null
+          admin_id?: string
+          created_at?: string
+          email?: string | null
+          id?: string
+          name?: string
+          phone?: string | null
+          subscription_expires_at?: string | null
+          subscription_plan?: string
+          subscription_status?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
       medical_records: {
         Row: {
@@ -216,6 +328,44 @@ export type Database = {
             columns: ["patient_id"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      messages: {
+        Row: {
+          consultation_id: string
+          content: string | null
+          created_at: string
+          id: string
+          media_url: string | null
+          message_type: string
+          sender_id: string
+        }
+        Insert: {
+          consultation_id: string
+          content?: string | null
+          created_at?: string
+          id?: string
+          media_url?: string | null
+          message_type?: string
+          sender_id: string
+        }
+        Update: {
+          consultation_id?: string
+          content?: string | null
+          created_at?: string
+          id?: string
+          media_url?: string | null
+          message_type?: string
+          sender_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "messages_consultation_id_fkey"
+            columns: ["consultation_id"]
+            isOneToOne: false
+            referencedRelation: "consultations"
             referencedColumns: ["id"]
           },
         ]
@@ -406,7 +556,7 @@ export type Database = {
       }
     }
     Enums: {
-      app_role: "admin" | "doctor" | "patient"
+      app_role: "admin" | "doctor" | "patient" | "hospital_admin"
       appointment_status: "pending" | "confirmed" | "completed" | "cancelled"
       user_role: "patient" | "doctor"
     }
@@ -536,7 +686,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["admin", "doctor", "patient"],
+      app_role: ["admin", "doctor", "patient", "hospital_admin"],
       appointment_status: ["pending", "confirmed", "completed", "cancelled"],
       user_role: ["patient", "doctor"],
     },
