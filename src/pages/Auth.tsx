@@ -102,11 +102,22 @@ const Auth = () => {
       if (error) throw error;
       if (!data.user) throw new Error("Sign up failed. Please try again.");
 
-      // Ensure profile exists (in case the DB trigger failed or was slow)
-      await ensureProfile(data.user);
-
-      toast({ title: "Account created!", description: "Welcome to Medweb Care." });
-      navigate(getRoleRedirect(validated.role as AppRole));
+      // Check if email confirmation is required
+      if (data.session) {
+        // Auto-confirmed (e.g. during development) — redirect immediately
+        await ensureProfile(data.user);
+        toast({ title: "Account created!", description: "Welcome to Medweb Care." });
+        navigate(getRoleRedirect(validated.role as AppRole));
+      } else {
+        // Email confirmation required
+        toast({
+          title: "Check your email",
+          description: "We've sent a verification link to " + validated.email + ". Please verify your email before signing in.",
+        });
+        setTab("signin");
+        setEmail(validated.email);
+        setPassword("");
+      }
     } catch (error: any) {
       toast({
         title: error instanceof z.ZodError ? "Validation Error" : "Sign Up Failed",
