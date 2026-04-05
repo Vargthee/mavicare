@@ -16,6 +16,7 @@ const HospitalDashboard = lazy(() => import("./pages/HospitalDashboard"));
 const Consultation = lazy(() => import("./pages/Consultation"));
 const Doctors = lazy(() => import("./pages/Doctors"));
 const MedicalRecords = lazy(() => import("./pages/MedicalRecords"));
+const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 const PageLoader = () => (
