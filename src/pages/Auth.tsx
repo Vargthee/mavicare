@@ -270,7 +270,8 @@ const Auth = () => {
                 <div className="flex items-center justify-between">
                   <button
                     type="button"
-                    className="text-sm text-primary font-medium hover:underline"
+                    disabled={resetCooldown > 0 || loading}
+                    className={`text-sm font-medium hover:underline ${resetCooldown > 0 ? "text-muted-foreground cursor-not-allowed" : "text-primary"}`}
                     onClick={async () => {
                       if (!email.trim()) {
                         toast({ title: "Enter your email", description: "Please enter your email address first.", variant: "destructive" });
@@ -283,6 +284,13 @@ const Auth = () => {
                         });
                         if (error) throw error;
                         toast({ title: "Check your email", description: "We've sent a password reset link to " + email });
+                        setResetCooldown(60);
+                        const interval = setInterval(() => {
+                          setResetCooldown((prev) => {
+                            if (prev <= 1) { clearInterval(interval); return 0; }
+                            return prev - 1;
+                          });
+                        }, 1000);
                       } catch (err: any) {
                         toast({ title: "Error", description: err.message, variant: "destructive" });
                       } finally {
@@ -290,7 +298,7 @@ const Auth = () => {
                       }
                     }}
                   >
-                    Forgot password?
+                    {resetCooldown > 0 ? `Resend in ${resetCooldown}s` : "Forgot password?"}
                   </button>
                 </div>
                 <Button type="submit" className="w-full h-11 text-base" disabled={loading} data-testid="button-signin">
