@@ -66,7 +66,18 @@ const Auth = () => {
         email: validated.email,
         password: validated.password,
       });
-      if (error) throw error;
+      if (error) {
+        if (error.message?.includes("Email not confirmed")) {
+          toast({
+            title: "Email not verified",
+            description: "Please check your inbox and verify your email before signing in.",
+            variant: "destructive",
+          });
+          setLoading(false);
+          return;
+        }
+        throw error;
+      }
 
       const detectedRole = await getUserRole(data.user);
       toast({ title: "Welcome back!", description: "Signed in successfully." });
