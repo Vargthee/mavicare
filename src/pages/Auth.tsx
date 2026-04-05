@@ -48,6 +48,7 @@ const Auth = () => {
   const [role, setRole] = useState<SignupRole>(defaultRole);
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [resetCooldown, setResetCooldown] = useState(0);
   const navigate = useNavigate();
   const { toast } = useToast();
 
