@@ -266,6 +266,32 @@ const Auth = () => {
                     </button>
                   </div>
                 </div>
+                <div className="flex items-center justify-between">
+                  <button
+                    type="button"
+                    className="text-sm text-primary font-medium hover:underline"
+                    onClick={async () => {
+                      if (!email.trim()) {
+                        toast({ title: "Enter your email", description: "Please enter your email address first.", variant: "destructive" });
+                        return;
+                      }
+                      setLoading(true);
+                      try {
+                        const { error } = await supabase.auth.resetPasswordForEmail(email, {
+                          redirectTo: `${window.location.origin}/reset-password`,
+                        });
+                        if (error) throw error;
+                        toast({ title: "Check your email", description: "We've sent a password reset link to " + email });
+                      } catch (err: any) {
+                        toast({ title: "Error", description: err.message, variant: "destructive" });
+                      } finally {
+                        setLoading(false);
+                      }
+                    }}
+                  >
+                    Forgot password?
+                  </button>
+                </div>
                 <Button type="submit" className="w-full h-11 text-base" disabled={loading} data-testid="button-signin">
                   {loading ? "Signing in..." : "Sign In"}
                 </Button>
