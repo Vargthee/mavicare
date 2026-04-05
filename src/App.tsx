@@ -16,6 +16,7 @@ const HospitalDashboard = lazy(() => import("./pages/HospitalDashboard"));
 const Consultation = lazy(() => import("./pages/Consultation"));
 const Doctors = lazy(() => import("./pages/Doctors"));
 const MedicalRecords = lazy(() => import("./pages/MedicalRecords"));
+const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 const PageLoader = () => (
@@ -38,6 +39,7 @@ const App = () => (
             <Route path="/admin/login" element={<AdminLogin />} />
             <Route path="/admin" element={<Admin />} />
             <Route path="/auth" element={<Auth />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/patient-dashboard" element={<PatientDashboard />} />
             <Route path="/doctor-dashboard" element={<DoctorDashboard />} />
             <Route path="/hospital-setup" element={<HospitalSetup />} />
